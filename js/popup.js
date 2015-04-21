@@ -7,16 +7,21 @@ document.addEventListener('DOMContentLoaded', function() {
 		// TODO Сделать show/hide
 		btn.innerHTML = 'OK';
 		btn.onclick = function(e){
-			var strAlg = '',
-				l = result['algorithm'].length;
-			for(var i=0; i<l; i++){
-				strAlg += alg(
-								result['algorithm'][i],
-								input.value,
-								result['salt'],
-								tab[0].url
-							);
-			}
+			chrome.tabs.query({currentWindow: true, active: true}, function(tab){
+				var strAlg = '',
+					l = result['algorithm'].length;
+				for(var i=0; i<l; i++){
+					strAlg += alg(
+									result['algorithm'][i],
+									input.value,
+									result['salt'],
+									tab[0].url
+								);
+				}
+				chrome.tabs.sendMessage(tab[0].id, {pass: hex_md5(strAlg)}, function(response) {
+					// TODO Добавить на callback закрытие окна
+				});
+			});
 		};
 		document.body.appendChild(input);
 		document.body.appendChild(btn);
