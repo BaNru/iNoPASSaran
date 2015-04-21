@@ -7,7 +7,9 @@
 
 	"permissions":
 	[
-
+		"tabs"
+		,"storage"
+		//,"<all_urls>"
 	],
 
 	"browser_action":
@@ -28,6 +30,13 @@
 	"options_page": "setting.html",
 	
 	"background":{
-		"page": "background.html"
-    }
+		//"page": "background.html"
+		"scripts": ["js/background.js"]
+    },
+	"content_scripts":[
+		{
+			"matches": ["http://*/*"],
+			"js":["js/page.js"]
+		}
+	]
 }
