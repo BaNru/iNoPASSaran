@@ -23,8 +23,8 @@
 Download
 --------
 
-Плагин для Chrome
-Плагин для Firefox
+[Плагин для Chrome v1.0-beta](https://github.com/BaNru/iNoPASSaran/releases/download/v1.0/iNoPASSaran.crx) (Опера пока не поддерживается)
+Плагин для Firefox (в разработке)
 
 
 Что это?
@@ -73,8 +73,8 @@ Download
 ---------
 
 Загрузите версию плагина для вашего браузера и разрешите установку:
-- для Chrome/Opera
-- для Firefox
+- [Плагин для Chrome](https://github.com/BaNru/iNoPASSaran/releases/download/v1.0/iNoPASSaran.crx) (Опера пока не поддерживается)
+- Плагин для Firefox (в разработке)
 
 
 Настройка
