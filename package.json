@@ -1,0 +1,36 @@
+{
+	"name": "inopassaran",
+	"title": "iNoPASSaran",
+	"id": "jid1-twFylvSnmzWQmg",
+	"description": "Password manager and generator addon for browser",
+	"author": "BaNru",
+	"license": "MPL 2.0",
+	"version": "1.1",
+	"homepage": "https://github.com/BaNru/iNoPASSaran",
+
+	"preferences": [{
+		"name": "lang",
+		"title": "Language",
+		"type": "radio",
+		"value": "en",
+		"options": [{
+			"value": "en",
+			"label": "English"
+		},{
+			"value": "ru",
+			"label": "Русский"
+		}]
+	},{
+		"name": "salt",
+		"title": "Salt",
+		"description": "Secondary password",
+		"type": "string",
+		"value": ""
+	},{
+		"name": "algorithm",
+		"title": "Algorithm",
+		"description": "Encryption algorithm (help: https://github.com/BaNru/iNoPASSaran)",
+		"type": "string",
+		"value": ""
+	}]
+}

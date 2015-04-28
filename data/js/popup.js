@@ -1,20 +1,33 @@
-document.addEventListener('DOMContentLoaded', function() {
+var input = document.createElement('input'),
+	btn   = document.createElement('button');
+//// TODO Сделать show/hide
+btn.innerHTML = 'OK';
+document.body.appendChild(input);
+document.body.appendChild(btn);
 
+if (typeof chrome !== "undefined"){
+	// Код для хрома
 	chrome.storage.local.get(function (result) {
-
-		var input = document.createElement('input'),
-			btn = document.createElement('button');
-		// TODO Сделать show/hide
-		btn.innerHTML = 'OK';
 		btn.onclick = function(e){
-			chrome.tabs.sendMessage(tab[0].id, {pass: genPass(result['algorithm'],input.value,result['salt'],tab[0].url)}, function(response) {
-				// TODO Добавить на callback закрытие окна
+			chrome.tabs.query({currentWindow: true, active: true}, function(tab){
+				chrome.tabs.sendMessage(tab[0].id, {pass: genPass(result['algorithm'],input.value,result['salt'],tab[0].url)}, function(response) {
+					// TODO Добавить на callback закрытие окна
+				});
 			});
 		};
-		document.body.appendChild(input);
-		document.body.appendChild(btn);
 	})
-});
+} else {
+	// Код для фокса
+	btn.addEventListener('click', function click(event) {
+		self.port.emit(
+			"text-entered",
+			genPass(self.options.algorithm,input.value,self.options.salt,self.options.url)
+		);
+	}, false);
+	self.port.on("show", function onShow() {
+		btn.focus();
+	});
+}
 
 
 /**
