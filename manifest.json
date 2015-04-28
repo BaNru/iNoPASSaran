@@ -28,11 +28,7 @@
 		"128": "img/icon/128.png"
 	},
 	"options_page": "setting.html",
-	
-	"background":{
-		//"page": "background.html"
-		"scripts": ["js/background.js"]
-	},
+
 	"content_scripts":[
 		{
 			"matches": ["http://*/*"],
