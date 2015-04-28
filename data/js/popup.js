@@ -7,26 +7,34 @@ document.addEventListener('DOMContentLoaded', function() {
 		// TODO Сделать show/hide
 		btn.innerHTML = 'OK';
 		btn.onclick = function(e){
-			chrome.tabs.query({currentWindow: true, active: true}, function(tab){
-				var strAlg = '',
-					l = result['algorithm'].length;
-				for(var i=0; i<l; i++){
-					strAlg += alg(
-									result['algorithm'][i],
-									input.value,
-									result['salt'],
-									tab[0].url
-								);
-				}
-				chrome.tabs.sendMessage(tab[0].id, {pass: hex_md5(strAlg)}, function(response) {
-					// TODO Добавить на callback закрытие окна
-				});
+			chrome.tabs.sendMessage(tab[0].id, {pass: genPass(result['algorithm'],input.value,result['salt'],tab[0].url)}, function(response) {
+				// TODO Добавить на callback закрытие окна
 			});
 		};
 		document.body.appendChild(input);
 		document.body.appendChild(btn);
 	})
 });
+
+
+/**
+ *
+ * Gen Pasword from Algorithm
+ *
+ */
+function genPass(a,pass,salt,url){
+	var strAlg = '',
+		l = a.length;
+	for(var i=0; i<l; i++){
+		strAlg += alg(
+			a[i],
+			pass,
+			salt,
+			url
+		);
+	}
+	return hex_md5(pass+''+strAlg);
+}
 
 
 /**
@@ -40,9 +48,9 @@ document.addEventListener('DOMContentLoaded', function() {
  * Algorithm
  * 
  * a - generate algorithm
- * data - plugin chrome localStorage data
- * url - URL
  * pass - Master Password
+ * salt - salt from plugin chrome localStorage
+ * url - URL
  *
  * 0 - Доменое имя целиком
  * 1 - Доменая зона целиком
