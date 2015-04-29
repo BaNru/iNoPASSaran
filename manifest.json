@@ -32,7 +32,7 @@
 
 	"content_scripts":[
 		{
-			"matches": ["http://*/*"],
+			"matches": ["https://*/*"],
 			"js":["data/js/page.js"]
 		}
 	]
