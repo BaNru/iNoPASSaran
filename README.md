@@ -72,8 +72,8 @@ Download
 ---------
 
 Загрузите версию плагина для вашего браузера и разрешите установку:
-- [Плагин для Chrome](https://github.com/BaNru/iNoPASSaran/releases/download/v1.0/iNoPASSaran.crx) (Опера пока не поддерживается)
-- Плагин для Firefox (в разработке)
+- [Плагин для Chrome v1.1](https://github.com/BaNru/iNoPASSaran/releases/download/1.1/iNoPASSaran.crx) (Опера пока не поддерживается)
+- [Плагин для Firefox v1.1](https://github.com/BaNru/iNoPASSaran/releases/download/1.1/iNoPASSaran.xpi)
 
 
 Настройка
