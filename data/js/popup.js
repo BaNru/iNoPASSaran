@@ -10,17 +10,15 @@ if (typeof chrome !== "undefined"){
 	chrome.storage.local.get(function (result) {
 		btn.onclick = function(e){
 			chrome.tabs.query({currentWindow: true, active: true}, function(tab){
-				chrome.tabs.sendMessage(tab[0].id, {pass: genPass(result['algorithm'],input.value,result['salt'],tab[0].url)}, function(response) {
-					// TODO Добавить на callback закрытие окна
-				});
+				chrome.tabs.sendMessage(tab[0].id, {pass: genPass(result['algorithm'],input.value,result['salt'],tab[0].url)});
+				window.close();
 			});
 		};
 		input.addEventListener("keypress", function(e) {
 			if (e.keyCode === 13) {
 				chrome.tabs.query({currentWindow: true, active: true}, function(tab){
-					chrome.tabs.sendMessage(tab[0].id, {pass: genPass(result['algorithm'],input.value,result['salt'],tab[0].url)}, function(response) {
-						// TODO Добавить на callback закрытие окна
-					});
+					chrome.tabs.sendMessage(tab[0].id, {pass: genPass(result['algorithm'],input.value,result['salt'],tab[0].url)});
+					window.close();
 				});
 			}
 		}, false);
