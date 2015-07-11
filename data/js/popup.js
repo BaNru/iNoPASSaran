@@ -15,6 +15,15 @@ if (typeof chrome !== "undefined"){
 				});
 			});
 		};
+		input.addEventListener("keypress", function(e) {
+			if (e.keyCode === 13) {
+				chrome.tabs.query({currentWindow: true, active: true}, function(tab){
+					chrome.tabs.sendMessage(tab[0].id, {pass: genPass(result['algorithm'],input.value,result['salt'],tab[0].url)}, function(response) {
+						// TODO Добавить на callback закрытие окна
+					});
+				});
+			}
+		}, false);
 	})
 } else {
 	// Код для фокса
@@ -24,6 +33,15 @@ if (typeof chrome !== "undefined"){
 			genPass(self.options.algorithm,input.value,self.options.salt,self.options.url)
 		);
 	}, false);
+	input.addEventListener("keypress", function(e) {
+        if (e.keyCode === 13) {
+            self.port.emit(
+				"text-entered",
+				genPass(self.options.algorithm,input.value,self.options.salt,self.options.url)
+			);
+        }
+    }, false);
+
 	self.port.on("show", function onShow() {
 		btn.focus();
 	});
