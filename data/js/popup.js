@@ -5,6 +5,10 @@ btn.innerHTML = 'OK';
 document.body.appendChild(input);
 document.body.appendChild(btn);
 
+setTimeout(function(){ // Firefox Hack
+	input.focus();
+},100)
+
 if (typeof chrome !== "undefined"){
 	// Код для хрома
 	chrome.storage.local.get(function (result) {
