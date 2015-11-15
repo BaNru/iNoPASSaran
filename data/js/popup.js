@@ -1,51 +1,127 @@
-var input = document.createElement('input'),
-	btn   = document.createElement('button');
-//// TODO Сделать show/hide
-btn.innerHTML = 'OK';
-document.body.appendChild(input);
-document.body.appendChild(btn);
+var DATA, DOMAIN, CURBASE,
+	password	= document.getElementById('password'),
+	passinsert	= document.getElementById('passinsert');
 
-setTimeout(function(){ // Firefox Hack
-	input.focus();
-},100)
+function init(){
+	var rules = ['subdomain','trim','login'];
+
+	rules.forEach(function(el, i) {
+		var rules_input = document.getElementById(el);
+
+		rules_input.onchange = function(){
+			var obj = {};
+			if (CURBASE == false) {
+				DATA[DOMAIN] = {};
+			}
+			obj = DATA[DOMAIN];
+			if (this.type == "checkbox") {
+				obj[el] = this.checked;
+			} else {
+				obj[el] = this.value;
+			}
+			saveSetting(DOMAIN,obj);
+		};
+		if (DATA && DATA[DOMAIN] && DATA[DOMAIN][el]) {
+			if (typeof DATA[DOMAIN][el] === "boolean") {
+				rules_input.checked = DATA[DOMAIN][el];
+			} else {
+				rules_input.value = DATA[DOMAIN][el];
+			}
+		}
+	});
+
+	setTimeout(function(){ // Firefox Hack !!!TODO - проверить show!!!
+		password.focus();
+	},100)
+}
+
+//// TODO Сделать show/hide
 
 if (typeof chrome !== "undefined"){
+
 	// Код для хрома
 	chrome.storage.local.get(function (result) {
-		btn.onclick = function(e){
-			chrome.tabs.query({currentWindow: true, active: true}, function(tab){
-				chrome.tabs.sendMessage(tab[0].id, {pass: genPass(result['algorithm'],input.value,result['salt'],tab[0].url)});
-				window.close();
-			});
-		};
-		input.addEventListener("keypress", function(e) {
-			if (e.keyCode === 13) {
-				chrome.tabs.query({currentWindow: true, active: true}, function(tab){
-					chrome.tabs.sendMessage(tab[0].id, {pass: genPass(result['algorithm'],input.value,result['salt'],tab[0].url)});
-					window.close();
-				});
+		DATA = result;
+		
+		if (!DATA['algorithm'] || !DATA['salt']) {
+			alert("Настройте ¡No PASSarán!");
+			try {
+				chrome.tabs.create({ 'url': 'chrome-extension://'+chrome.runtime.id+'/data/setting.html'});
+			} catch(e) {
+				alert(e);
 			}
-		}, false);
+		}
+
+		chrome.tabs.query({currentWindow: true, active: true}, function(tab){
+
+			DOMAIN = new URL(tab[0].url).hostname;
+			DOMAIN = DOMAIN.substring(DOMAIN.lastIndexOf(".", DOMAIN.lastIndexOf(".") - 1) + 1);
+			CURBASE	= search_domain(DATA,DOMAIN);
+
+			init();
+
+			passinsert.onclick = function(e){
+				chrome.tabs.sendMessage(
+					tab[0].id, {
+						pass: genPass(
+							DATA['algorithm']||false,
+							password.value,
+							DATA['salt']||false,
+							tab[0].url
+						)
+					}
+				);
+				window.close();
+			};
+			password.addEventListener("keypress", function(e) {
+				if (e.keyCode === 13) {
+					chrome.tabs.sendMessage(
+						tab[0].id, {
+							pass: genPass(
+								DATA['algorithm']||false,
+								password.value,
+								DATA['salt']||false,
+								tab[0].url
+							)
+						}
+					);
+					window.close();
+				}
+			}, false);
+		});
 	})
 } else {
+
 	// Код для фокса
-	btn.addEventListener('click', function click(event) {
+	passinsert.addEventListener('click', function click(event) {
 		self.port.emit(
 			"text-entered",
-			genPass(self.options.algorithm,input.value,self.options.salt,self.options.url)
+			genPass(
+				self.options.algorithm
+				, password.value
+				, self.options.salt
+				, self.options.url
+//				, self.options.base
+			)
 		);
 	}, false);
-	input.addEventListener("keypress", function(e) {
+	password.addEventListener("keypress", function(e) {
         if (e.keyCode === 13) {
             self.port.emit(
 				"text-entered",
-				genPass(self.options.algorithm,input.value,self.options.salt,self.options.url)
+				genPass(
+					self.options.algorithm
+					, password.value
+					, self.options.salt
+					, self.options.url
+//					, self.options.base
+				)
 			);
         }
     }, false);
 
 	self.port.on("show", function onShow() {
-		btn.focus();
+		passinsert.focus(); // !!!TODO - проверить show!!!
 	});
 }
 
@@ -56,7 +132,8 @@ if (typeof chrome !== "undefined"){
  *
  */
 function genPass(a,pass,salt,url){
-	var strAlg = '', l;
+	var strAlg = ''
+		, l;
 	a = a.toLowerCase();
 	if (a.indexOf(' ') >= 0) {
 		a = a.split(' ');
@@ -70,14 +147,12 @@ function genPass(a,pass,salt,url){
 			url
 		);
 	}
+	if (DATA && DATA[DOMAIN] && DATA[DOMAIN].trim) {
+		var sb = DATA[DOMAIN].trim.match(/(-?[0-9]+)(?:.*?(-?[0-9]+))?/);
+		return (hex_md5(pass+''+strAlg)).substr(sb[1],sb[2]);
+	}
 	return hex_md5(pass+''+strAlg);
 }
-
-
-/**
- * TODO Сделать алиасы
- * TODO Расширить количество комбинаций
- */
 
 
 /**
@@ -122,6 +197,16 @@ function genPass(a,pass,salt,url){
  *
 */
 function alg(a,pass,salt,url) {
+
+	var tURL = new URL(url).hostname.replace('www.',''),
+		partURL;
+
+	// Удаление поддоменов, если включено в настройках
+	if (CURBASE && DATA[DOMAIN] && DATA[DOMAIN].subdomain) {
+		tURL = tURL.substring(tURL.lastIndexOf(".", tURL.lastIndexOf(".") - 1) + 1);
+	}
+	partURL = tURL.match(/(.*)\.(.*$)/);
+
 //	var
 //		_url 		= new URL(url).hostname.replace('www.',''),
 //		parsrUrl	= _url.match(/(.*)\.(.*$)/),
@@ -148,26 +233,22 @@ function alg(a,pass,salt,url) {
 	// Basic
 
 	if (['0', 'a', 'k', 'u', 'а', 'й', 'у', 'э'].indexOf(a) >= 0){
-		return new URL(url).hostname.replace('www.','').match(/(.*)\.(.*$)/)[1];
+		return partURL[1];
 	};
 	if (['1', 'b', 'l', 'v', 'б', 'к', 'ф', 'ю'].indexOf(a) >= 0){
-		return new URL(url).hostname.replace('www.','').match(/(.*)\.(.*$)/)[2];
+		return partURL[2];
 	};
 	if (['2', 'c', 'm', 'w', 'в', 'л', 'х', 'я'].indexOf(a) >= 0){
-		return halfString(
-			new URL(url).hostname.replace('www.','').match(/(.*)\.(.*$)/)[1]
-		)[0]
+		return halfString(partURL[1])[0]
 	};
 	if (['3', 'd', 'n', 'x', 'г', 'м', 'ц'].indexOf(a) >= 0){
-		return halfString(
-			new URL(url).hostname.replace('www.','').match(/(.*)\.(.*$)/)[1]
-		)[1]
+		return halfString(partURL[1])[1]
 	};
 	if (['4', 'e', 'o', 'y', 'д', 'н', 'ч'].indexOf(a) >= 0){
-		return new URL(url).hostname.replace('www.','').match(/(.*)\.(.*$)/)[1].length;
+		return partURL[1].length;
 	};
 	if (['5', 'f', 'p', 'z', 'е', 'о', 'ш'].indexOf(a) >= 0){
-		return new URL(url).hostname.replace('www.','').match(/(.*)\.(.*$)/)[2].length;
+		return partURL[2].length;
 	};
 	if (['6', 'g', 'q', 'ё', 'п', 'щ'].indexOf(a) >= 0){
 		return salt;
@@ -184,20 +265,16 @@ function alg(a,pass,salt,url) {
 
 	// Extended
 	if (a == 10) {
-		return reverseString(new URL(url).hostname.replace('www.','').match(/(.*)\.(.*$)/)[1]);
+		return reverseString(partURL[1]);
 	}
 	if (a == 11) {
-		return reverseString(new URL(url).hostname.replace('www.','').match(/(.*)\.(.*$)/)[2]);
+		return reverseString(partURL[2]);
 	}
 	if (a == 12) {
-		return reverseString(halfString(
-			new URL(url).hostname.replace('www.','').match(/(.*)\.(.*$)/)[1]
-		)[0])
+		return reverseString(halfString(partURL[1])[0])
 	}
 	if (a == 13) {
-		return reverseString(halfString(
-			new URL(url).hostname.replace('www.','').match(/(.*)\.(.*$)/)[1]
-		)[1])
+		return reverseString(halfString(partURL[1])[1])
 	}
 	if (a == 14) {}
 	if (a == 15) {}
@@ -255,14 +332,27 @@ function halfString(str){
 	return [ str.substring(0,t), str.substring(t,l) ];
 }
 
+
 /**
  * Reverse String
  *
  * Переворачивает строху (str) задом наперед.
  *
  * Return string
- *
  */
 function reverseString(str) {
 	return str.split("").reverse().join("");
+}
+
+
+/**
+ * Search settings for the current domain
+ *
+ * Поиск настроек для домена в базе
+ *
+ * Return settings or false
+ */
+function search_domain(base,domain) {
+	if (!base) {return false}
+	return base[domain] || false;
 }

@@ -1,4 +1,19 @@
 /**
+ * Отладка
+ *
+ * Передача в BackgroundPage
+ *
+ * в манифесте активировать BackgroundPage
+ * , "background": {
+ *  	"scripts": ["background.js"]
+ * }
+ * не забыв положить пустой background.js в корень
+ */
+//chrome.storage.onChanged.addListener(function(changes, namespace) {
+	//chrome.extension.getBackgroundPage().console.log(changes, namespace);
+//});
+
+/**
  *
  * saveSetting
  *
@@ -20,7 +35,14 @@ function saveSetting(n,v) {
 	dataObj[n] = v;
 
 	chrome.storage.local.set(dataObj, function() {
+		if (typeof DATA !=="undefined") {
+			chrome.storage.local.get(function (result) {
+				DATA = result;
+				CURBASE	= search_domain(DATA,DOMAIN);
+			})
+		}
 	});
+
 }
 
 /**
@@ -73,7 +95,7 @@ function GeneratorRex(l,n,v) {
  * то возвращается системный язык, если нет,
  * то возвращается язык по умолчанию - английский.
  *
-*/
+ */
 function checkDefLang(){
 	var deflang = window.navigator.language;
 	for (var key in language) {

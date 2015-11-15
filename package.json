@@ -32,5 +32,11 @@
 		"description": "Encryption algorithm (help: https://github.com/BaNru/iNoPASSaran)",
 		"type": "string",
 		"value": ""
+	},{
+		"name": "base",
+		"title": "Settings Sites",
+		"type": "string",
+		"value": "",
+		"hidden": true
 	}]
 }
