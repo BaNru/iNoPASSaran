@@ -38,7 +38,6 @@ function saveSetting(n,v) {
 		if (typeof DATA !=="undefined") {
 			chrome.storage.local.get(function (result) {
 				DATA = result;
-				CURBASE	= search_domain(DATA,DOMAIN);
 			})
 		}
 	});

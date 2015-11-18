@@ -1,4 +1,4 @@
-var DATA, DOMAIN, CURBASE,
+var DATA, DOMAIN,
 	password	= document.getElementById('password'),
 	passinsert	= document.getElementById('passinsert');
 
@@ -10,16 +10,26 @@ function init(){
 
 		rules_input.onchange = function(){
 			var obj = {};
-			if (CURBASE == false) {
+
+			if (search_domain() == false) {
 				DATA[DOMAIN] = {};
 			}
 			obj = DATA[DOMAIN];
+
 			if (this.type == "checkbox") {
 				obj[el] = this.checked;
 			} else {
 				obj[el] = this.value;
 			}
-			saveSetting(DOMAIN,obj);
+
+			if (typeof chrome !== "undefined"){
+				saveSetting(DOMAIN,obj);
+			} else {
+				DATA[DOMAIN] = obj;
+				self.options.data = JSON.stringify(DATA);
+				self.port.emit("update", self.options.data);
+				console.log("1 " + self.options.data);
+			}
 		};
 		if (DATA && DATA[DOMAIN] && DATA[DOMAIN][el]) {
 			if (typeof DATA[DOMAIN][el] === "boolean") {
@@ -29,15 +39,11 @@ function init(){
 			}
 		}
 	});
-
-	setTimeout(function(){ // Firefox Hack !!!TODO - проверить show!!!
-		password.focus();
-	},100)
 }
 
 //// TODO Сделать show/hide
 
-if (typeof chrome !== "undefined"){
+if (typeof chrome !== "undefined"){ // Chrome
 
 	// Код для хрома
 	chrome.storage.local.get(function (result) {
@@ -56,7 +62,6 @@ if (typeof chrome !== "undefined"){
 
 			DOMAIN = new URL(tab[0].url).hostname;
 			DOMAIN = DOMAIN.substring(DOMAIN.lastIndexOf(".", DOMAIN.lastIndexOf(".") - 1) + 1);
-			CURBASE	= search_domain(DATA,DOMAIN);
 
 			init();
 
@@ -90,7 +95,21 @@ if (typeof chrome !== "undefined"){
 			}, false);
 		});
 	})
-} else {
+
+	password.focus();
+
+} else { // Firefox
+
+	DOMAIN = new URL(self.options.url).hostname;
+	DOMAIN = DOMAIN.substring(DOMAIN.lastIndexOf(".", DOMAIN.lastIndexOf(".") - 1) + 1);
+
+	if (self.options.data == '') {
+		DATA = {};
+	} else {
+		DATA = JSON.parse(self.options.data);
+	}
+
+	init();
 
 	// Код для фокса
 	passinsert.addEventListener('click', function click(event) {
@@ -101,7 +120,6 @@ if (typeof chrome !== "undefined"){
 				, password.value
 				, self.options.salt
 				, self.options.url
-//				, self.options.base
 			)
 		);
 	}, false);
@@ -114,14 +132,13 @@ if (typeof chrome !== "undefined"){
 					, password.value
 					, self.options.salt
 					, self.options.url
-//					, self.options.base
 				)
 			);
         }
     }, false);
 
 	self.port.on("show", function onShow() {
-		passinsert.focus(); // !!!TODO - проверить show!!!
+		passinsert.focus();
 	});
 }
 
@@ -202,7 +219,7 @@ function alg(a,pass,salt,url) {
 		partURL;
 
 	// Удаление поддоменов, если включено в настройках
-	if (CURBASE && DATA[DOMAIN] && DATA[DOMAIN].subdomain) {
+	if (search_domain() && DATA[DOMAIN] && DATA[DOMAIN].subdomain) {
 		tURL = tURL.substring(tURL.lastIndexOf(".", tURL.lastIndexOf(".") - 1) + 1);
 	}
 	partURL = tURL.match(/(.*)\.(.*$)/);
@@ -352,7 +369,7 @@ function reverseString(str) {
  *
  * Return settings or false
  */
-function search_domain(base,domain) {
-	if (!base) {return false}
-	return base[domain] || false;
+function search_domain() {
+	if (!DATA || !DOMAIN) {return false}
+	return DATA[DOMAIN] || false;
 }

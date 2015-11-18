@@ -160,9 +160,9 @@ label input.save {
 	flex-direction: column;
 }
 #password {
-	width: -webkit-calc(100% - 30px);
-	width: -moz-calc(100% - 30px);
-	width: calc(100% - 36px);
+	width: -webkit-calc(100% - 42px);
+	width: -moz-calc(100% - 42px);
+	width: calc(100% - 42px);
 }
 
 #filters {

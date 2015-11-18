@@ -18,6 +18,7 @@ function handleClick(state) {
 				lang		: preferences.lang,
 				algorithm	: preferences.algorithm,
 				salt		: preferences.salt,
+				data		: preferences.data,
 				url			: tabs.activeTab.url
 			},
 			contentScriptFile: [
@@ -26,13 +27,17 @@ function handleClick(state) {
 				"./js/md5-min.js",
 				"./js/popup.js"
 			],
-			width: 260,
-			height: 60
+			width: 300,
+			height: 200
 		});
 	popup.show();
 
 	popup.on("show", function() {
 		popup.port.emit("show");
+	});
+
+	popup.port.on("update", function(v) {
+		preferences.data = v;
 	});
 
 	popup.port.on("text-entered", function (text) {
