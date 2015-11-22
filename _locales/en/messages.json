@@ -1,0 +1,32 @@
+{
+
+	"app_description": {
+		"message": "Password manager and generator addon for browser"
+	},
+
+
+	"salt_title" : {
+		"message" : "Secondary password (salt)"
+	},
+	"algorithm_title" : {
+		"message" : "Encryption algorithm"
+	},
+	"algorithm_description" : {
+		"message" : "help: https://github.com/BaNru/iNoPASSaran)"
+	},
+
+
+	"extended" : {
+		"message" : "Advanced settings"
+	},
+	"subdomain" : {
+		"message" : "Disable subdomains"
+	},
+	"trim" : {
+		"message" : "Trim hash"
+	},
+	"login" : {
+		"message" : "Login"
+	}
+
+}

@@ -28,7 +28,6 @@ function init(){
 				DATA[DOMAIN] = obj;
 				self.options.data = JSON.stringify(DATA);
 				self.port.emit("update", self.options.data);
-				console.log("1 " + self.options.data);
 			}
 		};
 		if (DATA && DATA[DOMAIN] && DATA[DOMAIN][el]) {
@@ -48,7 +47,7 @@ if (typeof chrome !== "undefined"){ // Chrome
 	// Код для хрома
 	chrome.storage.local.get(function (result) {
 		DATA = result;
-		
+
 		if (!DATA['algorithm'] || !DATA['salt']) {
 			alert("Настройте ¡No PASSarán!");
 			try {
@@ -57,6 +56,10 @@ if (typeof chrome !== "undefined"){ // Chrome
 				alert(e);
 			}
 		}
+
+		[].forEach.call(document.querySelectorAll('[data-l10n-id]'), function(el, i) {
+			el.innerHTML = chrome.i18n.getMessage(el.dataset.l10nId)
+		});
 
 		chrome.tabs.query({currentWindow: true, active: true}, function(tab){
 
@@ -111,7 +114,6 @@ if (typeof chrome !== "undefined"){ // Chrome
 
 	init();
 
-	// Код для фокса
 	passinsert.addEventListener('click', function click(event) {
 		self.port.emit(
 			"text-entered",

@@ -13,6 +13,7 @@
 	//chrome.extension.getBackgroundPage().console.log(changes, namespace);
 //});
 
+
 /**
  *
  * saveSetting
@@ -44,6 +45,7 @@ function saveSetting(n,v) {
 
 }
 
+
 /**
  *
  * GeneratorRex
@@ -53,6 +55,8 @@ function saveSetting(n,v) {
  * l = label text
  * n = attr name
  * v = attr value
+ *
+ *	TODO Переписать без генерации, сделать только функцию onkeyup
  * 
  */
 function GeneratorRex(l,n,v) {
@@ -80,27 +84,4 @@ function GeneratorRex(l,n,v) {
 	label.appendChild(input);
 
 	document.body.appendChild(label);
-}
-
-
-/**
- *
- * checkDefLang
- * 
- * Сheck default the language
- * 
- * Проверка языка по-умолчанию и сравнение с имеющимися в плагине.
- * Если язык системы пользователя присутсвует в плагине,
- * то возвращается системный язык, если нет,
- * то возвращается язык по умолчанию - английский.
- *
- */
-function checkDefLang(){
-	var deflang = window.navigator.language;
-	for (var key in language) {
-		if (deflang == key) {
-			return key;
-		}
-	}
-	return 'en';
 }

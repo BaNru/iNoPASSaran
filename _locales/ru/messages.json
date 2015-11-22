@@ -1,0 +1,32 @@
+{
+
+	"app_description" : {
+		"message" : "Менеджер и генератор паролей ¡No PASSarán"
+	},
+
+
+	"salt_title" : {
+		"message" : "Вторичный пароль (соль)"
+	},
+	"algorithm_title" : {
+		"message" : "Алгоритм шифрования"
+	},
+	"algorithm_description" : {
+		"message" : "Справка: https://github.com/BaNru/iNoPASSaran)"
+	},
+
+
+	"extended" : {
+		"message" : "Расширенные настройки"
+	},
+	"subdomain" : {
+		"message" : "Отключить поддомены"
+	},
+	"trim" : {
+		"message" : "Обреать"
+	},
+	"login" : {
+		"message" : "Логин"
+	}
+
+}
