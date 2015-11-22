@@ -22,8 +22,6 @@ function handleClick(state) {
 				url			: tabs.activeTab.url
 			},
 			contentScriptFile: [
-				"./js/lang.js",
-				"./js/core.js",
 				"./js/md5-min.js",
 				"./js/popup.js"
 			],
