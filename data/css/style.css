@@ -143,6 +143,7 @@ label input.save {
 }
 #popup_page form {
 	padding: 30px 0 0 0;
+	position: relative;
 }
 #popup_page button, #popup_page select {
 	border: 1px solid rgba(0,0,0,.2);
@@ -160,9 +161,7 @@ label input.save {
 	flex-direction: column;
 }
 #password {
-	width: -webkit-calc(100% - 42px);
-	width: -moz-calc(100% - 42px);
-	width: calc(100% - 42px);
+	width: 158px;
 }
 
 #filters {
@@ -179,4 +178,22 @@ label input.save {
 }
 #login, [for="login"]{
 	display: none;
+}
+
+#passshow {
+	display:none;
+}
+#passshow + label {
+	background: url('../img/eye.png') 50% 50% no-repeat;
+	opacity: .5;
+	width: 30px;
+	height: 30px;
+	position: absolute;
+	top: 30px;
+	left: 127px;
+	padding: 0;
+	transition: opacity 0.2s
+}
+#passshow:checked + label {
+	opacity: 1;
 }

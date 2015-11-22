@@ -1,6 +1,16 @@
 var DATA, DOMAIN,
 	password	= document.getElementById('password'),
-	passinsert	= document.getElementById('passinsert');
+	passinsert	= document.getElementById('passinsert'),
+	passshow	= document.getElementById('passshow');
+
+	
+passshow.addEventListener('change', function () {
+	if (this.checked == true) {
+		password.type = 'text';
+	} else {
+		password.type = 'password';
+	}
+})
 
 function init(){
 	var rules = ['subdomain','trim','login'];
