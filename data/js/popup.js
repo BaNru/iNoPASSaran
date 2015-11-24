@@ -1,7 +1,8 @@
 var DATA, DOMAIN,
 	password	= document.getElementById('password'),
 	passinsert	= document.getElementById('passinsert'),
-	passshow	= document.getElementById('passshow');
+	passshow	= document.getElementById('passshow'),
+	extended	= document.querySelector('legend[data-l10n-id="extended"]');
 
 	
 passshow.addEventListener('change', function () {
@@ -11,6 +12,15 @@ passshow.addEventListener('change', function () {
 		password.type = 'password';
 	}
 })
+
+extended.onclick = function(e){
+	this.parentNode.classList.toggle("hide");
+	if (typeof chrome !== "undefined"){
+		document.documentElement.style.minHeight = document.body.offsetHeight + 'px';
+	} else {
+		self.port.emit("resize", [document.body.offsetWidth,document.body.offsetHeight]);
+	}
+}
 
 function init(){
 	var rules = ['subdomain','trim','login'];

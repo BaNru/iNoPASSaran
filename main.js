@@ -25,8 +25,8 @@ function handleClick(state) {
 				"./js/md5-min.js",
 				"./js/popup.js"
 			],
-			width: 300,
-			height: 200
+			width: 250,
+			height: 155
 		});
 	popup.show();
 
@@ -37,6 +37,10 @@ function handleClick(state) {
 	popup.port.on("update", function(v) {
 		preferences.data = v;
 	});
+
+	popup.port.on("resize", function(v) {
+		popup.resize(v[0],v[1]);
+	})
 
 	popup.port.on("text-entered", function (text) {
 		require("sdk/tabs").activeTab.attach({

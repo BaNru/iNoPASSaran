@@ -131,7 +131,6 @@ label input.save {
 }
 #popup_page {
 	height: 100%;
-	min-height: 40px;
 
 	display: flex;
 	justify-content: center;
@@ -167,10 +166,18 @@ label input.save {
 #filters {
 	margin: 30px 0;
 }
+#filters.hide {
+	overflow: hidden;
+	height: 26px;
+}
 #filters legend {
 	text-align: center;
 	font-weight: bold;
 	margin: 0 0 10px 0;
+	cursor: pointer;
+}
+#filters legend:hover {
+	color: #039;
 }
 #filters input[type="checkbox"] {
 	float: left;
