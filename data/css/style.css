@@ -36,6 +36,14 @@ body{
 	height:100%;
 }
 
+* {
+	-webkit-transition: all .2s linear;
+	-moz-transition: all .2s linear;
+	-o-transition: all .2s linear;
+	-khtml-transition: all .2s linear;
+	transition: all .2s linear;
+}
+
 a {
 	color: #039;
 	text-decoration: none;
@@ -194,6 +202,7 @@ label input.save {
 	cursor: pointer;
 	margin-right: 12px;
 	opacity: .75;
+	position: relative;
 }
 li::before {
 	font-family: "icon";
@@ -210,7 +219,98 @@ li::before {
 [data-show="anon"]::before {
 	content: "\EA01";
 }
-.pbtn li.active {
+#copy::before {
+	content: "\EA03";
+}
+#copy::after {
+	font-family: "icon";
+	content: "\EA04";
+	display: block;
+	position: absolute;
+	border-radius: 100%;
+	color: #fff;
+	background-color: #1C1;
+	bottom: 0;
+	right: 0;
+	width: 0;
+	height: 0;
+	font-size: 0;
+	line-height: 0;
+	opacity: 0;
+}
+#copy.ok::after{
+	bottom: -4px;
+	right: -4px;
+	width: 20px;
+	height: 20px;
+	font-size: 20px;
+	line-height: 20px;
+	opacity: 1;
+	-webkit-animation:	ok_animation .5s 1;
+	-moz-animation:		ok_animation .5s 1;
+	animation:			ok_animation .5s 1;
+}
+@-webkit-keyframes ok_animation {
+	0% {
+		bottom: 10px;
+		right: 10px;
+		width: 0;
+		height: 0;
+		font-size: 0;
+		line-height: 0;
+		opacity: 0;
+	}
+	100% {
+		bottom: -4px;
+		right: -4px;
+		width: 20px;
+		height: 20px;
+		font-size: 20px;
+		line-height: 20px;
+		opacity: 1;
+	}
+}
+@-moz-keyframes ok_animation {
+	0% {
+		bottom: 10px;
+		right: 10px;
+		width: 0;
+		height: 0;
+		font-size: 0;
+		line-height: 0;
+		opacity: 0;
+	}
+	100% {
+		bottom: -4px;
+		right: -4px;
+		width: 20px;
+		height: 20px;
+		font-size: 20px;
+		line-height: 20px;
+		opacity: 1;
+	}
+}
+@keyframes ok_animation {
+	0% {
+		bottom: 10px;
+		right: 10px;
+		width: 0;
+		height: 0;
+		font-size: 0;
+		line-height: 0;
+		opacity: 0;
+	}
+	100% {
+		bottom: -4px;
+		right: -4px;
+		width: 20px;
+		height: 20px;
+		font-size: 20px;
+		line-height: 20px;
+		opacity: 1;
+	}
+}
+.pbtn li.active, #copy.ok {
 	border: 1px solid #666;
 	opacity: 1;
 	color: #666;

@@ -26,7 +26,11 @@
 	},
 
 	"guest" : {
-		"message" : "Guest mode",
+		"message" : "Guest mode"
+	},
+
+	"copy" : {
+		"message" : "Copy to Clipboard"
 	}
 
 }

@@ -2,6 +2,7 @@ var DATA, DOMAIN,
 	password	= document.getElementById('password'),
 	passinsert	= document.getElementById('passinsert'),
 	passshow	= document.getElementById('passshow'),
+	copybtn		= document.getElementById('copy'),
 	pbtn		= document.querySelectorAll('.pbtn li'),
 	pbtnH		= document.querySelectorAll('.pbtnH'),
 	salt_input	= document.getElementById('salt'),
@@ -50,7 +51,9 @@ function pbtnTabs() {
 	}
 }
 [].forEach.call(pbtn, function(element, index, array) {
-	element.onclick = pbtnTabs;
+	if(element.dataset.show){
+		element.onclick = pbtnTabs;
+	}
 })
 
 function init(){
@@ -146,6 +149,25 @@ if (typeof chrome !== "undefined"){ // Chrome
 					window.close();
 				}
 			}, false);
+
+			copybtn.addEventListener('click', function click(event) {
+				this.classList.remove('ok');
+				const input = document.createElement('input');
+				input.style.position = 'fixed';
+				input.style.opacity = 0;
+				input.value = genPass(
+								DATA['algorithm']||false,
+								password.value,
+								DATA['salt']||false,
+								tab[0].url
+							);
+				document.body.appendChild(input);
+				input.select();
+				document.execCommand('Copy', false, null);
+				document.body.removeChild(input);
+				this.classList.add('ok');
+			})
+
 		});
 	})
 
@@ -188,6 +210,18 @@ if (typeof chrome !== "undefined"){ // Chrome
 			);
         }
     }, false);
+
+	copybtn.addEventListener('click', function click(event) {
+			this.classList.remove('ok');
+			this.offsetWidth = this.offsetWidth;
+			self.port.emit("copy", genPass(
+				self.options.algorithm
+				, password.value
+				, self.options.salt
+				, self.options.url
+			));
+			this.classList.add('ok');
+	})
 
 	self.port.on("show", function onShow() {
 		password.focus();

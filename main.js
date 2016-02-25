@@ -26,7 +26,7 @@ function handleClick(state) {
 				"./js/popup.js"
 			],
 			width: 250,
-			height: 150
+			height: 154
 		});
 	popup.show();
 
@@ -40,12 +40,17 @@ function handleClick(state) {
 
 	popup.port.on("resize", function(v) {
 		popup.resize(v[0],v[1]);
-	})
+	});
 
 	popup.port.on("text-entered", function (text) {
 		require("sdk/tabs").activeTab.attach({
 			contentScript: 'this.document.activeElement.value = "' + text + '";'
 		});
 		popup.hide();
+	});
+
+	popup.port.on("copy", function(text) {
+		var clipboard = require("sdk/clipboard");
+		clipboard.set(text);
 	});
 }
