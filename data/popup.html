@@ -10,14 +10,21 @@
 <body id="popup_page">
 
 <form>
-	<input id="password" type="password">
-	<input id="passshow" type="checkbox">
-	<label for="passshow"></label>
-	<button id="passinsert">OK</button>
 
-	<fieldset id="filters" class="hide">
-		<legend data-l10n-id="extended">Расширенные настройки</legend>
+	<fieldset id="pswd">
+		<input id="password" type="password"><!--
+		--><input id="passshow" type="checkbox"><!--
+		--><label for="passshow"></label><!--
+		--><button id="passinsert">OK</button>
+	</fieldset>
 
+	<ul class="pbtn">
+		<li data-show="filters"><span data-l10n-id="extended">Расширенные настройки</span></li><!--
+		--><li data-show="anon"><span data-l10n-id="guest">Гостевой режим</span></li>
+	</ul>
+
+	<fieldset id="filters" class="hide pbtnH">
+		
 		<input id="subdomain" type="checkbox">
 		<label for="subdomain" data-l10n-id="subdomain">Отключить поддомены</label>
 
@@ -26,6 +33,14 @@
 
 		<label for="login" data-l10n-id="login">Логин (не работает!)</label>
 		<input id="login">
+	</fieldset>
+
+	<fieldset id="anon" class="hide pbtnH">
+		<label for="salt" data-l10n-id="salt_title">Соль</label>
+		<input id="salt">
+
+		<label for="algorithm" data-l10n-id="algorithm_title">Алгоритм шифрования</label>
+		<input id="algorithm">
 	</fieldset>
 
 </form>

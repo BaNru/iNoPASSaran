@@ -1,0 +1,14 @@
+{
+	"name": "inopassaran",
+	"title": "¡No PASSarán",
+	"description": "Password manager and generator addon for browser",
+	"author": "BaNru",
+	"license": "MPL 2.0",
+	"homepage": "https://github.com/BaNru/iNoPASSaran",
+
+	"main": "gulpfile.js",
+	"devDependencies": {
+		"gulp": "*",
+		"gulp-iconfont": "*"
+	}
+}

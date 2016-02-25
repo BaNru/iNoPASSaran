@@ -15,18 +15,18 @@
 		"message" : "Справка: https://github.com/BaNru/iNoPASSaran)"
 	},
 
-
-	"extended" : {
-		"message" : "Расширенные настройки"
-	},
 	"subdomain" : {
 		"message" : "Отключить поддомены"
 	},
 	"trim" : {
-		"message" : "Обреать"
+		"message" : "Обреать пароль"
 	},
 	"login" : {
 		"message" : "Логин"
+	},
+
+	"guest" : {
+		"message" : "Гостевой режим",
 	}
 
 }

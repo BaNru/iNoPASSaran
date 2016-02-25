@@ -1,5 +1,12 @@
 /* reset v.0.003 beta :-) */
 
+@font-face {
+	font-family: "icon";
+	font-style: normal;
+	font-weight: 400;
+	src: url("../font/icon.woff") format("woff");
+}
+
 /* START reset */
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,
 abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,
@@ -39,10 +46,10 @@ a:hover {
 }
 
 h1,h2,h3,h4,h5,h6 {font-weight:normal;line-height:1.5em;text-align:center;margin: 2em 0 1em;}
-h1{font-size:1.8em;line-height: 1.67em;margin: 0;padding: 2.1em 0 1.2em;}
-h2{font-size:1.6em;line-height: 1.873em;margin:1.9em 0 .9em;}
-h3{font-size:1.4em;line-height: 2.145em;margin:2.11em 0 1.1em;}
-h4{font-size:1.2em;}
+h1{font-size:1.4em;line-height: 1.67em;margin: 0;padding: 2.1em 0 1.2em;}
+h2{font-size:1.3em;line-height: 1.873em;margin:1.9em 0 .9em;}
+h3{font-size:1.2em;line-height: 2.145em;margin:2.11em 0 1.1em;}
+h4{font-size:1.1em;}
 h5{font-size:1em;}
 h6{font-size:.8em;}
 
@@ -98,7 +105,7 @@ label {
 	padding: 15px 6px 0 6px;
 }
 input[type="checkbox"] + label {
-	padding-top: 6px;
+
 }
 /* END global */
 
@@ -138,7 +145,7 @@ label input.save {
 	align-items: center;
 	flex-wrap: wrap;
 	
-	min-width: 250px;
+	width: 250px;
 }
 #popup_page form {
 	padding: 30px 0 0 0;
@@ -156,20 +163,70 @@ label input.save {
 	padding: 3px 6px;
 	height: 29px;
 }
+#popup_page button:hover {
+	background: #f5f5f5;
+	background: -moz-linear-gradient(top, #dddddd 0%, #f5f5f5 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#dddddd), color-stop(100%,#f5f5f5));
+	background: -webkit-linear-gradient(top, #dddddd 0%,#f5f5f5 100%);
+	background: linear-gradient(to bottom, #dddddd 0%,#f5f5f5 100%);
+}
 #popup_page p {
 	flex-direction: column;
 }
+#pswd {
+	position: relative;
+}
 #password {
-	width: 158px;
+	width: 154px;
+}
+.pbtn {
+	padding: 1em 0;
+}
+.pbtn li {
+	width: 36px;
+	height: 36px;
+	border: 1px dashed #999;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	list-style:none;
+	display: inline-block;
+	cursor: pointer;
+	margin-right: 12px;
+	opacity: .75;
+}
+li::before {
+	font-family: "icon";
+	display: block;
+	width: 36px;
+	height: 36px;
+	font-size: 32px;
+	line-height: 36px;
+	text-align: center;
+}
+[data-show="filters"]::before {
+	content: "\EA02";
+}
+[data-show="anon"]::before {
+	content: "\EA01";
+}
+.pbtn li.active {
+	border: 1px solid #666;
+	opacity: 1;
+	color: #666;
+}
+.pbtn li:hover {
+	border-color: #19E;
+	opacity: 1;
+	color: #19E;
+}
+.pbtn li span {
+	display: none;
+}
+.pbtn li:last-of-type {
+	margin-right: 0;
 }
 
-#filters {
-	margin: 30px 0;
-}
-#filters.hide {
-	overflow: hidden;
-	height: 26px;
-}
 #filters legend {
 	text-align: center;
 	font-weight: bold;
@@ -181,7 +238,7 @@ label input.save {
 }
 #filters input[type="checkbox"] {
 	float: left;
-	margin: 8px 8px 0 2px;
+	margin: 17px 8px 0 2px;
 }
 #login, [for="login"]{
 	display: none;
@@ -196,11 +253,15 @@ label input.save {
 	width: 30px;
 	height: 30px;
 	position: absolute;
-	top: 30px;
-	left: 127px;
+	top: 0;
+	left: 124px;
 	padding: 0;
 	transition: opacity 0.2s
 }
 #passshow:checked + label {
 	opacity: 1;
+}
+
+.hide {
+	display: none;
 }

@@ -15,10 +15,6 @@
 		"message" : "help: https://github.com/BaNru/iNoPASSaran)"
 	},
 
-
-	"extended" : {
-		"message" : "Advanced settings"
-	},
 	"subdomain" : {
 		"message" : "Disable subdomains"
 	},
@@ -27,6 +23,10 @@
 	},
 	"login" : {
 		"message" : "Login"
+	},
+
+	"guest" : {
+		"message" : "Guest mode",
 	}
 
 }

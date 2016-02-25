@@ -2,9 +2,12 @@ var DATA, DOMAIN,
 	password	= document.getElementById('password'),
 	passinsert	= document.getElementById('passinsert'),
 	passshow	= document.getElementById('passshow'),
-	extended	= document.querySelector('legend[data-l10n-id="extended"]');
+	pbtn		= document.querySelectorAll('.pbtn li'),
+	pbtnH		= document.querySelectorAll('.pbtnH'),
+	salt_input	= document.getElementById('salt'),
+	alg_input	= document.getElementById('algorithm');
 
-	
+
 passshow.addEventListener('change', function () {
 	if (this.checked == true) {
 		password.type = 'text';
@@ -13,14 +16,42 @@ passshow.addEventListener('change', function () {
 	}
 })
 
-extended.onclick = function(e){
-	this.parentNode.classList.toggle("hide");
+
+/**
+ *
+ * pbtnTabs
+ *
+ * Switching from advanced blocks
+ * Переключение блоков с расширенными возможностями
+ *
+ * default - this element containing attribute data-show="id_show_block"
+ *
+ */
+function pbtnTabs() {
+	var test = true;
+	if (this.classList.contains('active')) {
+		test = false;
+	}
+	[].forEach.call(pbtnH, function(el) {
+		el.classList.add('hide');
+	});
+	[].forEach.call(pbtn, function(el) {
+		el.classList.remove('active');
+	});
+	if (test) {
+		this.classList.add('active');
+		document.querySelector('#'+this.dataset.show).classList.remove('hide');
+	}
+
 	if (typeof chrome !== "undefined"){
 		document.documentElement.style.minHeight = document.body.offsetHeight + 'px';
 	} else {
 		self.port.emit("resize", [document.body.offsetWidth,document.body.offsetHeight]);
 	}
 }
+[].forEach.call(pbtn, function(element, index, array) {
+	element.onclick = pbtnTabs;
+})
 
 function init(){
 	var rules = ['subdomain','trim','login'];
@@ -60,7 +91,6 @@ function init(){
 	});
 }
 
-//// TODO Сделать show/hide
 
 if (typeof chrome !== "undefined"){ // Chrome
 
@@ -173,6 +203,10 @@ if (typeof chrome !== "undefined"){ // Chrome
 function genPass(a,pass,salt,url){
 	var strAlg = ''
 		, l;
+	if (alg_input.value && salt_input.value) {
+		a = alg_input.value;
+		salt = salt_input.value;
+	}
 	a = a.toLowerCase();
 	if (a.indexOf(' ') >= 0) {
 		a = a.split(' ');
