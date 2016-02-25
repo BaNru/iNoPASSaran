@@ -26,7 +26,7 @@ function handleClick(state) {
 				"./js/popup.js"
 			],
 			width: 250,
-			height: 155
+			height: 150
 		});
 	popup.show();
 

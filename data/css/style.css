@@ -148,7 +148,7 @@ label input.save {
 	width: 250px;
 }
 #popup_page form {
-	padding: 30px 0 0 0;
+	padding: 30px 0;
 	position: relative;
 }
 #popup_page button, #popup_page select {
@@ -180,7 +180,7 @@ label input.save {
 	width: 154px;
 }
 .pbtn {
-	padding: 1em 0;
+	padding: 20px 0 0;
 }
 .pbtn li {
 	width: 36px;

@@ -190,7 +190,7 @@ if (typeof chrome !== "undefined"){ // Chrome
     }, false);
 
 	self.port.on("show", function onShow() {
-		passinsert.focus();
+		password.focus();
 	});
 }
 
