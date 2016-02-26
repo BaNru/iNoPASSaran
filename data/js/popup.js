@@ -2,6 +2,9 @@ var DATA, DOMAIN,
 	password	= document.getElementById('password'),
 	passinsert	= document.getElementById('passinsert'),
 	passshow	= document.getElementById('passshow'),
+	showpassbtn	= document.getElementById('showpassbtn'),
+	showpass	= document.getElementById('showpass'),
+	showpassi	= document.getElementById('showpassi'),
 	copybtn		= document.getElementById('copy'),
 	pbtn		= document.querySelectorAll('.pbtn li'),
 	pbtnH		= document.querySelectorAll('.pbtnH'),
@@ -30,6 +33,8 @@ passshow.addEventListener('change', function () {
  */
 function pbtnTabs() {
 	var test = true;
+	// Обнуляем поле с паролем на всякий случай
+	showpassi.value = "";
 	if (this.classList.contains('active')) {
 		test = false;
 	}
@@ -52,7 +57,7 @@ function pbtnTabs() {
 }
 [].forEach.call(pbtn, function(element, index, array) {
 	if(element.dataset.show){
-		element.onclick = pbtnTabs;
+		element.addEventListener('click', pbtnTabs);
 	}
 })
 
@@ -147,6 +152,15 @@ if (typeof chrome !== "undefined"){ // Chrome
 						}
 					);
 					window.close();
+				} else {
+					if (showpassbtn.classList.contains('active')) {
+						showpassi.value = genPass(
+							DATA['algorithm']||false,
+							password.value,
+							DATA['salt']||false,
+							tab[0].url
+						);
+					}
 				}
 			}, false);
 
@@ -166,6 +180,15 @@ if (typeof chrome !== "undefined"){ // Chrome
 				document.execCommand('Copy', false, null);
 				document.body.removeChild(input);
 				this.classList.add('ok');
+			})
+
+			showpassbtn.addEventListener('click', function click(event) {
+				showpassi.value = genPass(
+					DATA['algorithm']||false,
+					password.value,
+					DATA['salt']||false,
+					tab[0].url
+				);
 			})
 
 		});
@@ -208,7 +231,16 @@ if (typeof chrome !== "undefined"){ // Chrome
 					, self.options.url
 				)
 			);
-        }
+        } else {
+			if (showpassbtn.classList.contains('active')) {
+				showpassi.value = genPass(
+					self.options.algorithm
+					, password.value
+					, self.options.salt
+					, self.options.url
+				)
+			}
+		}
     }, false);
 
 	copybtn.addEventListener('click', function click(event) {
@@ -221,6 +253,15 @@ if (typeof chrome !== "undefined"){ // Chrome
 				, self.options.url
 			));
 			this.classList.add('ok');
+	})
+
+	showpassbtn.addEventListener('click', function click(event) {
+		showpassi.value = genPass(
+			self.options.algorithm
+			, password.value
+			, self.options.salt
+			, self.options.url
+		);
 	})
 
 	self.port.on("show", function onShow() {

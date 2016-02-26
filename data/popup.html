@@ -20,12 +20,12 @@
 
 	<ul class="pbtn">
 		<li id="copy"><span data-l10n-id="copy">Копировать в буфер</span></li><!--
+		--><li data-show="showpass" id="showpassbtn"><span data-l10n-id="showpass">Показать пароль</span></li><!--
 		--><li data-show="filters"><span data-l10n-id="extended">Расширенные настройки</span></li><!--
 		--><li data-show="anon"><span data-l10n-id="guest">Гостевой режим</span></li>
 	</ul>
 
 	<fieldset id="filters" class="hide pbtnH">
-		
 		<input id="subdomain" type="checkbox">
 		<label for="subdomain" data-l10n-id="subdomain">Отключить поддомены</label>
 
@@ -42,6 +42,11 @@
 
 		<label for="algorithm" data-l10n-id="algorithm_title">Алгоритм шифрования</label>
 		<input id="algorithm">
+	</fieldset>
+
+	<fieldset id="showpass" class="hide pbtnH">
+		<label for="showpassi" data-l10n-id="gen_password">Пароль</label>
+		<input id="showpassi">
 	</fieldset>
 
 </form>

@@ -24,6 +24,9 @@
 	"login" : {
 		"message" : "Логин"
 	},
+	"gen_password" : {
+		"message" : "Сгенерированный пароль"
+	},
 
 	"guest" : {
 		"message" : "Гостевой режим"

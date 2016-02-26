@@ -24,6 +24,9 @@
 	"login" : {
 		"message" : "Login"
 	},
+	"gen_password" : {
+		"message" : "The generated password"
+	},
 
 	"guest" : {
 		"message" : "Guest mode"
