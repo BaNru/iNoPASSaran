@@ -51,13 +51,18 @@
 
 </form>
 
+<!-- @exclude -->
 <!--
 	Раскомментировать при компиляции для Chrome
 	Закомментировать при компиляции для Firefox
+	Ниже и далее используется gulp-preprocess для сборки
 -->
+<!-- @endexclude -->
+<!-- @if NODE_ENV='chrome' -->
 <script type="text/javascript" src="js/core.js"></script>
 <script type="text/javascript" src="js/md5-min.js"></script>
 <script type="text/javascript" src="js/popup.js"></script>
+<!-- @endif -->
 
 </body>
 </html>

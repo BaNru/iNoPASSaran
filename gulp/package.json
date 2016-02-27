@@ -9,6 +9,7 @@
 	"main": "gulpfile.js",
 	"devDependencies": {
 		"gulp": "*",
+		"gulp-preprocess": "*",
 		"gulp-iconfont": "*"
 	}
 }

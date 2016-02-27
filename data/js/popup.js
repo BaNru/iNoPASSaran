@@ -49,11 +49,21 @@ function pbtnTabs() {
 		document.querySelector('#'+this.dataset.show).classList.remove('hide');
 	}
 
+// @exclude
 	if (typeof chrome !== "undefined"){
+// @endexclude
+// @if NODE_ENV='chrome'
 		document.documentElement.style.minHeight = document.body.offsetHeight + 'px';
+// @endif
+// @exclude
 	} else {
+// @endexclude
+// @if NODE_ENV='firefox'
 		self.port.emit("resize", [document.body.offsetWidth,document.body.offsetHeight]);
+// @endif
+// @exclude
 	}
+// @endexclude
 }
 [].forEach.call(pbtn, function(element, index, array) {
 	if(element.dataset.show){
@@ -80,14 +90,23 @@ function init(){
 			} else {
 				obj[el] = this.value;
 			}
-
+// @exclude
 			if (typeof chrome !== "undefined"){
+// @endexclude
+// @if NODE_ENV='chrome'
 				saveSetting(DOMAIN,obj);
+// @endif
+// @exclude
 			} else {
+// @endexclude
+// @if NODE_ENV='firefox'
 				DATA[DOMAIN] = obj;
 				self.options.data = JSON.stringify(DATA);
 				self.port.emit("update", self.options.data);
+// @endif
+// @exclude
 			}
+// @endexclude
 		};
 		if (DATA && DATA[DOMAIN] && DATA[DOMAIN][el]) {
 			if (typeof DATA[DOMAIN][el] === "boolean") {
@@ -100,9 +119,10 @@ function init(){
 }
 
 
-if (typeof chrome !== "undefined"){ // Chrome
-
-	// Код для хрома
+// @exclude
+if (typeof chrome !== "undefined"){
+// @endexclude
+// @if NODE_ENV='chrome'
 	chrome.storage.local.get(function (result) {
 		DATA = result;
 
@@ -196,9 +216,11 @@ if (typeof chrome !== "undefined"){ // Chrome
 	})
 
 	password.focus();
-
+// @endif
+// @exclude
 } else { // Firefox
-
+// @endexclude
+// @if NODE_ENV='firefox'
 	DOMAIN = new URL(self.options.url).hostname;
 	DOMAIN = DOMAIN.substring(DOMAIN.lastIndexOf(".", DOMAIN.lastIndexOf(".") - 1) + 1);
 
@@ -268,8 +290,10 @@ if (typeof chrome !== "undefined"){ // Chrome
 	self.port.on("show", function onShow() {
 		password.focus();
 	});
+// @endif
+// @exclude
 }
-
+// @endexclude
 
 /**
  *
@@ -297,7 +321,6 @@ function genPass(a,pass,salt,url){
 			url
 		);
 	}
-	console.log(salt);
 	if (DATA && DATA[DOMAIN] && DATA[DOMAIN].trim) {
 		var sb = DATA[DOMAIN].trim.match(/(-?[0-9]+)(?:.*?(-?[0-9]+))?/);
 		return (hex_md5(pass+''+strAlg)).substr(sb[1],sb[2]);
