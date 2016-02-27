@@ -107,12 +107,13 @@ if (typeof chrome !== "undefined"){ // Chrome
 		DATA = result;
 
 		if (!DATA['algorithm'] || !DATA['salt']) {
-			alert("Настройте ¡No PASSarán!");
-			try {
-				chrome.tabs.create({ 'url': 'chrome-extension://'+chrome.runtime.id+'/data/setting.html'});
-			} catch(e) {
-				alert(e);
-			}
+			//alert("Настройте ¡No PASSarán!");
+			//try {
+			//	chrome.tabs.create({ 'url': 'chrome-extension://'+chrome.runtime.id+'/data/setting.html'});
+			//} catch(e) {
+			//	alert(e);
+			//}
+			error_cfg();
 		}
 
 		[].forEach.call(document.querySelectorAll('[data-l10n-id]'), function(el, i) {
@@ -139,7 +140,7 @@ if (typeof chrome !== "undefined"){ // Chrome
 				);
 				window.close();
 			};
-			password.addEventListener("keypress", function(e) {
+			password.addEventListener("keyup", function(e) {
 				if (e.keyCode === 13) {
 					chrome.tabs.sendMessage(
 						tab[0].id, {
@@ -220,7 +221,7 @@ if (typeof chrome !== "undefined"){ // Chrome
 			)
 		);
 	}, false);
-	password.addEventListener("keypress", function(e) {
+	password.addEventListener("keyup", function(e) {
         if (e.keyCode === 13) {
             self.port.emit(
 				"text-entered",
@@ -278,10 +279,11 @@ if (typeof chrome !== "undefined"){ // Chrome
 function genPass(a,pass,salt,url){
 	var strAlg = ''
 		, l;
-	if (alg_input.value && salt_input.value) {
-		a = alg_input.value;
-		salt = salt_input.value;
-	}
+
+	// Проверка заполненности полей в режиме гостя
+	a = alg_input.value || a || error_cfg();
+	salt = salt_input.value || salt || error_cfg();
+
 	a = a.toLowerCase();
 	if (a.indexOf(' ') >= 0) {
 		a = a.split(' ');
@@ -295,6 +297,7 @@ function genPass(a,pass,salt,url){
 			url
 		);
 	}
+	console.log(salt);
 	if (DATA && DATA[DOMAIN] && DATA[DOMAIN].trim) {
 		var sb = DATA[DOMAIN].trim.match(/(-?[0-9]+)(?:.*?(-?[0-9]+))?/);
 		return (hex_md5(pass+''+strAlg)).substr(sb[1],sb[2]);
@@ -503,4 +506,23 @@ function reverseString(str) {
 function search_domain() {
 	if (!DATA || !DOMAIN) {return false}
 	return DATA[DOMAIN] || false;
+}
+
+/**
+ * An error in the plugin settings
+ *
+ * Ошибка в настройках плагина
+ *
+ * Return false
+ */
+// TODO Переделать и расширить ошибки
+function error_cfg() {
+	if (!document.querySelector('#errorCFG')) {
+		var error = document.createElement('div');
+		error.className = 'error';
+		error.id = 'errorCFG';
+		error.innerHTML = "Ошибка в настройках плагина!<br>Вероятно не введены данные!";
+		document.getElementById('pswd').appendChild(error);
+	}
+	return false;
 }
