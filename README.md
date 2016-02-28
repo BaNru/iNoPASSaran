@@ -14,8 +14,8 @@
 Download
 --------
 
-[Плагин для Chrome и Opera v1.3](https://github.com/BaNru/iNoPASSaran/releases/download/1.3/iNoPASSaran.crx)
-[Плагин для Firefox v1.3](https://github.com/BaNru/iNoPASSaran/releases/download/1.3/iNoPASSaran.xpi)
+- [Плагин для Chrome и Opera v1.3](https://github.com/BaNru/iNoPASSaran/releases/download/1.3/Chrome.Opera.iNoPASSaran-1.3.crx)
+- [Плагин для Firefox v1.3](https://github.com/BaNru/iNoPASSaran/releases/download/1.3/Firefox.inopassaran-1.3.xpi)
 
 
 Что это?
@@ -64,8 +64,8 @@ Download
 ---------
 
 Загрузите версию плагина для вашего браузера и разрешите установку:
-- [Плагин для Chrome v1.2](https://github.com/BaNru/iNoPASSaran/releases/download/1.2/iNoPASSaran.crx) (Опера пока не поддерживается)  
-- [Плагин для Firefox v1.2](https://github.com/BaNru/iNoPASSaran/releases/download/1.2/iNoPASSaran.xpi)
+- [Плагин для Chrome и Opera v1.3](https://github.com/BaNru/iNoPASSaran/releases/download/1.3/Chrome.Opera.iNoPASSaran-1.3.crx)
+- [Плагин для Firefox v1.3](https://github.com/BaNru/iNoPASSaran/releases/download/1.3/Firefox.inopassaran-1.3.xpi)
 
 
 Настройка
