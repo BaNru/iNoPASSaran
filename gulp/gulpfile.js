@@ -1,6 +1,8 @@
 var gulp = require('gulp'),
 	preprocess = require('gulp-preprocess'),
 	iconfont = require('gulp-iconfont'),
+	rename = require('gulp-rename'),
+	replace = require('gulp-replace'),
 	runTimestamp = Math.round(Date.now()/1000);
 
 /* создание шрифтов из */
@@ -36,7 +38,7 @@ gulp.task('firefox', function() {
 	gulp.src('../data/font/icon.woff').pipe(gulp.dest('../firefox/data/font/'));
 	gulp.src('../locale/**').pipe(gulp.dest('../firefox/locale/'));
 
-	require('child_process').exec('cd ../firefox/ && jpm xpi');
+//	require('child_process').exec('cd ../firefox/ && jpm xpi');
 });
 
 // Сборка Chrome
@@ -60,4 +62,18 @@ gulp.task('chrome', function() {
 
 	// Не пашет :(
 	//require('child_process').exec('google-chrome --pack-extension="../chrome/" --pack-extension-key="../../iNoPASSaran.pem"');
+});
+
+gulp.task('online', function() {
+	gulp.src('../data/popup.html')
+		.pipe(preprocess({context: { NODE_ENV: 'online', DEBUG: true}}))
+		.pipe(rename({basename: "index"}))
+		.pipe(gulp.dest('../online/'));
+	gulp.src('../data/css/style.css')
+		.pipe(preprocess({context: { NODE_ENV: 'online', DEBUG: true}}))
+		.pipe(replace(/\.\.\//g, '../../data/'))
+		.pipe(gulp.dest('../online/css/'));
+	gulp.src('../data/js/popup.js')
+		.pipe(preprocess({context: { NODE_ENV: 'online', DEBUG: true}}))
+		.pipe(gulp.dest('../online/js/'));
 });

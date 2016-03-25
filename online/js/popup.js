@@ -49,21 +49,6 @@ function pbtnTabs() {
 		document.querySelector('#'+this.dataset.show).classList.remove('hide');
 	}
 
-// @exclude
-	if (typeof chrome !== "undefined"){
-// @endexclude
-// @if NODE_ENV='chrome'
-		document.documentElement.style.minHeight = document.body.offsetHeight + 'px';
-// @endif
-// @exclude
-	} else {
-// @endexclude
-// @if NODE_ENV='firefox'
-		self.port.emit("resize", [document.body.offsetWidth,document.body.offsetHeight]);
-// @endif
-// @exclude
-	}
-// @endexclude
 }
 [].forEach.call(pbtn, function(element, index, array) {
 	if(element.dataset.show){
@@ -90,23 +75,6 @@ function init(){
 			} else {
 				obj[el] = this.value;
 			}
-// @exclude
-			if (typeof chrome !== "undefined"){
-// @endexclude
-// @if NODE_ENV='chrome'
-				saveSetting(DOMAIN,obj);
-// @endif
-// @exclude
-			} else {
-// @endexclude
-// @if NODE_ENV='firefox'
-				DATA[DOMAIN] = obj;
-				self.options.data = JSON.stringify(DATA);
-				self.port.emit("update", self.options.data);
-// @endif
-// @exclude
-			}
-// @endexclude
 		};
 		if (DATA && DATA[DOMAIN] && DATA[DOMAIN][el]) {
 			if (typeof DATA[DOMAIN][el] === "boolean") {
@@ -119,183 +87,6 @@ function init(){
 }
 
 
-// @exclude
-// TODO Провести рефакторинг и оптимизацию!
-if (typeof chrome !== "undefined"){
-// @endexclude
-// @if NODE_ENV='chrome'
-	chrome.storage.local.get(function (result) {
-		DATA = result;
-
-		if (!DATA['algorithm'] || !DATA['salt']) {
-			//alert("Настройте ¡No PASSarán!");
-			//try {
-			//	chrome.tabs.create({ 'url': 'chrome-extension://'+chrome.runtime.id+'/data/setting.html'});
-			//} catch(e) {
-			//	alert(e);
-			//}
-			error_cfg();
-		}
-
-		[].forEach.call(document.querySelectorAll('[data-l10n-id]'), function(el, i) {
-			el.innerHTML = chrome.i18n.getMessage(el.dataset.l10nId)
-		});
-
-		chrome.tabs.query({currentWindow: true, active: true}, function(tab){
-
-			DOMAIN = new URL(tab[0].url).hostname;
-			DOMAIN = DOMAIN.substring(DOMAIN.lastIndexOf(".", DOMAIN.lastIndexOf(".") - 1) + 1);
-
-			init();
-
-			passinsert.onclick = function(e){
-				chrome.tabs.sendMessage(
-					tab[0].id, {
-						pass: genPass(
-							DATA['algorithm']||false,
-							password.value,
-							DATA['salt']||false,
-							tab[0].url
-						)
-					}
-				);
-				window.close();
-			};
-			password.addEventListener("keyup", function(e) {
-				if (e.keyCode === 13) {
-					chrome.tabs.sendMessage(
-						tab[0].id, {
-							pass: genPass(
-								DATA['algorithm']||false,
-								password.value,
-								DATA['salt']||false,
-								tab[0].url
-							)
-						}
-					);
-					window.close();
-				} else {
-					if (showpassbtn.classList.contains('active')) {
-						showpassi.value = genPass(
-							DATA['algorithm']||false,
-							password.value,
-							DATA['salt']||false,
-							tab[0].url
-						);
-					}
-				}
-			}, false);
-
-			copybtn.addEventListener('click', function click(event) {
-				this.classList.remove('ok');
-				const input = document.createElement('input');
-				input.style.position = 'fixed';
-				input.style.opacity = 0;
-				input.value = genPass(
-								DATA['algorithm']||false,
-								password.value,
-								DATA['salt']||false,
-								tab[0].url
-							);
-				document.body.appendChild(input);
-				input.select();
-				document.execCommand('Copy', false, null);
-				document.body.removeChild(input);
-				this.classList.add('ok');
-			})
-
-			showpassbtn.addEventListener('click', function click(event) {
-				showpassi.value = genPass(
-					DATA['algorithm']||false,
-					password.value,
-					DATA['salt']||false,
-					tab[0].url
-				);
-			})
-
-		});
-	})
-
-	password.focus();
-// @endif
-// @exclude
-} else { // Firefox
-// @endexclude
-// @if NODE_ENV='firefox'
-	DOMAIN = new URL(self.options.url).hostname;
-	DOMAIN = DOMAIN.substring(DOMAIN.lastIndexOf(".", DOMAIN.lastIndexOf(".") - 1) + 1);
-
-	if (self.options.data == '') {
-		DATA = {};
-	} else {
-		DATA = JSON.parse(self.options.data);
-	}
-
-	init();
-
-	passinsert.addEventListener('click', function click(event) {
-		self.port.emit(
-			"text-entered",
-			genPass(
-				self.options.algorithm
-				, password.value
-				, self.options.salt
-				, self.options.url
-			)
-		);
-	}, false);
-	password.addEventListener("keyup", function(e) {
-        if (e.keyCode === 13) {
-            self.port.emit(
-				"text-entered",
-				genPass(
-					self.options.algorithm
-					, password.value
-					, self.options.salt
-					, self.options.url
-				)
-			);
-        } else {
-			if (showpassbtn.classList.contains('active')) {
-				showpassi.value = genPass(
-					self.options.algorithm
-					, password.value
-					, self.options.salt
-					, self.options.url
-				)
-			}
-		}
-    }, false);
-
-	copybtn.addEventListener('click', function click(event) {
-			this.classList.remove('ok');
-			this.offsetWidth = this.offsetWidth;
-			self.port.emit("copy", genPass(
-				self.options.algorithm
-				, password.value
-				, self.options.salt
-				, self.options.url
-			));
-			this.classList.add('ok');
-	})
-
-	showpassbtn.addEventListener('click', function click(event) {
-		showpassi.value = genPass(
-			self.options.algorithm
-			, password.value
-			, self.options.salt
-			, self.options.url
-		);
-	})
-
-	self.port.on("show", function onShow() {
-		password.focus();
-	});
-// @endif
-// @exclude
-}
-// @endexclude
-// @if NODE_ENV='online'
 	init();
 	DOMAIN = new URL(window.location.href).hostname;
 	DATA = {};
@@ -323,7 +114,6 @@ if (typeof chrome !== "undefined"){
 			showpassi.value = "";
 		}
 	})
-// @endif
 
 /**
  *
@@ -570,17 +360,5 @@ function search_domain() {
  */
 // TODO Переделать и расширить ошибки
 function error_cfg() {
-// @if NODE_ENV='chrome' || NODE_ENV='firefox'
-	if (!document.querySelector('#errorCFG')) {
-		var error = document.createElement('div');
-		error.className = 'error';
-		error.id = 'errorCFG';
-		error.innerHTML = "Ошибка в настройках плагина!<br>Вероятно не введены данные!";
-		document.getElementById('pswd').appendChild(error);
-	}
-	return false;
-// @endif
-// @if NODE_ENV='online'
 	return "";
-// @endif
 }

@@ -4,7 +4,7 @@
 	font-family: "icon";
 	font-style: normal;
 	font-weight: 400;
-	src: url("../font/icon.woff") format("woff");
+	src: url("../../data/font/icon.woff") format("woff");
 }
 
 /* START reset */
@@ -26,7 +26,7 @@ input[type='image'],input[type='reset'],input[type='submit']{cursor:pointer;}
 
 /* START global */
 html,body{min-height:100%;}
-html{background:url("../img/bg.jpg") repeat #efefef;}
+html{background:url("../../data/img/bg.jpg") repeat #efefef;}
 body{
 	color:#464646;
 	font:100%/150% Ubuntu, Droid Sans, Tahoma, Verdana, Arial, sans-serif;
@@ -387,7 +387,6 @@ li::before {
 	display: none;
 }
 
-/* @if NODE_ENV='online' */
 #passshow + label {
 	right: 0;
 	left: auto;
@@ -398,4 +397,3 @@ li::before {
 #password {
     width: 100%;
 }
-/* @endif */
