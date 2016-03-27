@@ -12,6 +12,9 @@
 <form autocomplete="off">
 	<fieldset id="pswd">
 		<h1>¡No PASSarán Online</h1>
+		<label for="site" data-l10n-id="domain_title">Домен</label>
+		<input id="site">
+
 		<label for="salt" data-l10n-id="salt_title">Соль</label>
 		<input id="salt">
 	
@@ -66,7 +69,6 @@
 				window.location.href
 			));
 			event.target.classList.add('ok');
-			//alert("Copied text to clipboard: " + event.data["text/plain"] );
 		});
 	});
 </script>

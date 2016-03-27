@@ -9,7 +9,8 @@ var DATA, DOMAIN,
 	pbtn		= document.querySelectorAll('.pbtn li'),
 	pbtnH		= document.querySelectorAll('.pbtnH'),
 	salt_input	= document.getElementById('salt'),
-	alg_input	= document.getElementById('algorithm');
+	alg_input	= document.getElementById('algorithm'),
+	site_input	= document.getElementById('site');
 
 
 passshow.addEventListener('change', function () {
@@ -121,6 +122,7 @@ function init(){
 
 // @exclude
 // TODO Провести рефакторинг и оптимизацию!
+// TODO Разобраться с доменами при рефакторинге!
 if (typeof chrome !== "undefined"){
 // @endexclude
 // @if NODE_ENV='chrome'
@@ -306,7 +308,15 @@ if (typeof chrome !== "undefined"){
 					false,
 					password.value,
 					false,
-					window.location.href
+					// TODO Добавить предупреждение
+					// window.location.href
+					(function() {
+						if (site_input.value) {
+							return 'http://'+site_input.value.replace(/https?:\/\//,'')
+						} else {
+							return false
+						}
+					})()
 				);
 			}
 		});
@@ -317,13 +327,20 @@ if (typeof chrome !== "undefined"){
 				false,
 				password.value,
 				false,
-				window.location.href
+				(function() {
+					if (site_input.value) {
+						return 'http://'+site_input.value.replace(/https?:\/\//,'')
+					} else {
+						return false
+					}
+				})()
 			);
 		} else {
 			showpassi.value = "";
 		}
 	})
 // @endif
+
 
 /**
  *
@@ -361,6 +378,34 @@ function genPass(a,pass,salt,url){
 
 /**
  *
+ * algDomain
+ *
+ * Разбивает домен на домен и зону.
+ * Если на входе FALSE, то возвращает массив с пустыми значениями.
+ *
+ * url - URL or false
+ *
+ * return [domain, domain zone] or ["","",""]
+ * TODO извабиться от лишнего пустого аргумента
+ * 
+ */
+function algDomain(url) {
+	// Если нет домена
+	if (!url) {return ["","",""];}
+
+	var tURL = new URL(url).hostname.replace('www.',''),
+		partURL;
+
+	// Удаление поддоменов, если включено в настройках
+	if (search_domain() && DATA[DOMAIN] && DATA[DOMAIN].subdomain) {
+		tURL = tURL.substring(tURL.lastIndexOf(".", tURL.lastIndexOf(".") - 1) + 1);
+	}
+	return tURL.match(/(.*)\.(.*$)/);
+}
+
+
+/**
+ *
  * Algorithm
  * 
  * a - generate algorithm
@@ -370,8 +415,8 @@ function genPass(a,pass,salt,url){
  *
  * Basic:
  *
- * 0 - Доменое имя целиком					alias: a, k, u, а, й, у, э
- * 1 - Доменая зона целиком					alias: b, l, v, б, к, ф, ю
+ * 0 - Доменное имя целиком					alias: a, k, u, а, й, у, э
+ * 1 - Доменная зона целиком				alias: b, l, v, б, к, ф, ю
  * 2 - Первая половина домена				alias: c, m, w, в, л, х, я
  * 3 - Вторая половина домена				alias: d, n, x, г, м, ц, -
  * 4 - Количества символов в домене			alias: e, o, y, д, н, ч, -
@@ -401,22 +446,12 @@ function genPass(a,pass,salt,url){
  *
 */
 function alg(a,pass,salt,url) {
-
-	var tURL = new URL(url).hostname.replace('www.',''),
-		partURL;
-
-	// Удаление поддоменов, если включено в настройках
-	if (search_domain() && DATA[DOMAIN] && DATA[DOMAIN].subdomain) {
-		tURL = tURL.substring(tURL.lastIndexOf(".", tURL.lastIndexOf(".") - 1) + 1);
-	}
-	partURL = tURL.match(/(.*)\.(.*$)/);
-
 //	var
 //		_url 		= new URL(url).hostname.replace('www.',''),
 //		parsrUrl	= _url.match(/(.*)\.(.*$)/),
 //
 //		_0		= parsrUrl[1],				// Доменное имя целиком
-//		_1		= parsrUrl[2],				// Доменая зона целиком
+//		_1		= parsrUrl[2],				// Доменная зона целиком
 //
 //		_2_3	= halfString(_0),
 //		_2		= _2_3[0],					// Первая половина домена
@@ -437,22 +472,30 @@ function alg(a,pass,salt,url) {
 	// Basic
 
 	if (['0', 'a', 'k', 'u', 'а', 'й', 'у', 'э'].indexOf(a) >= 0){
-		return partURL[1];
+		return algDomain(url)[1];
 	};
 	if (['1', 'b', 'l', 'v', 'б', 'к', 'ф', 'ю'].indexOf(a) >= 0){
-		return partURL[2];
+		return algDomain(url)[2];
 	};
 	if (['2', 'c', 'm', 'w', 'в', 'л', 'х', 'я'].indexOf(a) >= 0){
-		return halfString(partURL[1])[0]
+		return halfString(algDomain(url)[1])[0]
 	};
 	if (['3', 'd', 'n', 'x', 'г', 'м', 'ц'].indexOf(a) >= 0){
-		return halfString(partURL[1])[1]
+		return halfString(algDomain(url)[1])[1]
 	};
 	if (['4', 'e', 'o', 'y', 'д', 'н', 'ч'].indexOf(a) >= 0){
-		return partURL[1].length;
+		if (algDomain(url)[1].length > 0) {
+			return algDomain(url)[1].length;
+		} else {
+			return "";
+		}
 	};
 	if (['5', 'f', 'p', 'z', 'е', 'о', 'ш'].indexOf(a) >= 0){
-		return partURL[2].length;
+		if (algDomain(url)[2].length > 0) {
+			return algDomain(url)[2].length;
+		} else {
+			return "";
+		}
 	};
 	if (['6', 'g', 'q', 'ё', 'п', 'щ'].indexOf(a) >= 0){
 		return salt;
@@ -469,16 +512,16 @@ function alg(a,pass,salt,url) {
 
 	// Extended
 	if (a == 10) {
-		return reverseString(partURL[1]);
+		return reverseString(algDomain(url)[1]);
 	}
 	if (a == 11) {
-		return reverseString(partURL[2]);
+		return reverseString(algDomain(url)[2]);
 	}
 	if (a == 12) {
-		return reverseString(halfString(partURL[1])[0])
+		return reverseString(halfString(algDomain(url)[1])[0])
 	}
 	if (a == 13) {
-		return reverseString(halfString(partURL[1])[1])
+		return reverseString(halfString(algDomain(url)[1])[1])
 	}
 	if (a == 14) {}
 	if (a == 15) {}
