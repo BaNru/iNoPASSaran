@@ -58,16 +58,18 @@
 <script type="text/javascript" src="js/ZeroClipboard.min.js"></script>
 <script>
 	var client = new ZeroClipboard(document.getElementById("copy"));
-	client.on("ready", function(readyEvent){
-		client.on("aftercopy", function(event){
-			event.target.classList.remove('ok');
-			event.target.offsetWidth = event.target.offsetWidth;
+	client.on("ready", function(){
+		client.on("beforecopy", function(){
 			ZeroClipboard.setData( "text/plain", genPass(
 				false,
 				password.value,
 				false,
 				window.location.href
 			));
+		});
+		client.on("aftercopy", function(event){
+			event.target.classList.remove('ok');
+			event.target.offsetWidth = event.target.offsetWidth;
 			event.target.classList.add('ok');
 		});
 	});
