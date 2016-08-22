@@ -37,11 +37,10 @@ body{
 }
 
 * {
-	-webkit-transition: all .2s linear;
-	-moz-transition: all .2s linear;
-	-o-transition: all .2s linear;
-	-khtml-transition: all .2s linear;
 	transition: all .2s linear;
+}
+.global-zeroclipboard-container {
+	transition: none;
 }
 
 a {
@@ -339,7 +338,7 @@ li::before {
 #filters legend:hover {
 	color: #039;
 }
-#filters input[type="checkbox"] {
+form input[type="checkbox"] {
 	float: left;
 	margin: 17px 8px 0 2px;
 }
