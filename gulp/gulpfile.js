@@ -3,7 +3,14 @@ var gulp = require('gulp'),
 	iconfont = require('gulp-iconfont'),
 	rename = require('gulp-rename'),
 	replace = require('gulp-replace'),
+	watch = require('gulp-watch'),
+	strip = require('gulp-strip-comments'),
 	runTimestamp = Math.round(Date.now()/1000);
+
+gulp.task('default', function() {
+	gulp
+	.watch(['../data/*','../data/js/*'], ['online']);
+});
 
 /* создание шрифтов из */
 gulp.task('font', function(){
@@ -28,6 +35,7 @@ gulp.task('firefox', function() {
 		.pipe(gulp.dest('../firefox/data/'));
 	gulp.src('../data/js/popup.js')
 		.pipe(preprocess({context: { NODE_ENV: 'firefox', DEBUG: false}}))
+		.pipe(strip())
 		.pipe(gulp.dest('../firefox/data/js/'));
 
 	gulp.src(['../main.js','../package.json']).pipe(gulp.dest('../firefox/'));
@@ -43,13 +51,14 @@ gulp.task('firefox', function() {
 
 // Сборка Chrome
 gulp.task('chrome', function() {
-	gulp.src('../data/js/*').pipe(gulp.dest('../chrome/data/js/'));
+	gulp.src(['../data/js/*','!../data/js/popup.js']).pipe(gulp.dest('../chrome/data/js/'));
 
 	gulp.src('../data/popup.html')
-		.pipe(preprocess({context: { NODE_ENV: 'chrome', DEBUG: true}}))
+		.pipe(preprocess({context: { NODE_ENV: 'chrome', DEBUG: false}}))
 		.pipe(gulp.dest('../chrome/data/'));
 	gulp.src('../data/js/popup.js')
 		.pipe(preprocess({context: { NODE_ENV: 'chrome', DEBUG: false}}))
+		.pipe(strip())
 		.pipe(gulp.dest('../chrome/data/js/'));
 
 	gulp.src(['../manifest.json','../background.js']).pipe(gulp.dest('../chrome/'));

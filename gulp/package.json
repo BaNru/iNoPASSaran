@@ -11,6 +11,8 @@
 		"gulp": "*",
 		"gulp-preprocess": "*",
 		"gulp-rename": "*",
-		"gulp-iconfont": "*"
+		"gulp-iconfont": "*",
+		"gulp-watch": "*",
+		"gulp-strip-comments" : "*"
 	}
 }
