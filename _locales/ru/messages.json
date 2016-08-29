@@ -34,6 +34,14 @@
 
 	"copy" : {
 		"message" : "Копировать в буфер"
+	},
+	
+	"dis_domain" : {
+		"message" : "Забыть про домен"
+	},
+	"domain_title" : {
+		"message" : "Домен"
 	}
+
 
 }
