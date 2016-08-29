@@ -25,7 +25,7 @@ Download
 
 ### Бета версия
 
-- [Плагин для Chrome и Opera v1.4beta](https://github.com/BaNru/iNoPASSaran/releases/download/1.4/Chrome.Opera.iNoPASSaran-1.4beta.crx)
+- [Плагин для Chrome и Opera v1.4beta](https://github.com/BaNru/iNoPASSaran/releases/download/1.4beta/Chrome.Opera.iNoPASSaran-1.4beta.crx)
 - [Плагин для Firefox v1.4beta](https://github.com/BaNru/iNoPASSaran/releases/download/1.4beta/Firefox.inopassaran-1.4beta.xpi)
 
 
