@@ -1,3 +1,5 @@
+/* jshint -W100 */
+// TODO Сделать форму шире, в ширину MD5 строки (32 символа), чтобы умещалась вся строка
 var DATA, DOMAIN,
 	password	= document.getElementById('password'),
 	passinsert	= document.getElementById('passinsert'),
@@ -8,18 +10,90 @@ var DATA, DOMAIN,
 	copybtn		= document.getElementById('copy'),
 	pbtn		= document.querySelectorAll('.pbtn li'),
 	pbtnH		= document.querySelectorAll('.pbtnH'),
+	dis_domain	= document.getElementById('dis_domain'),
+	site_d		= document.getElementById('site_d'),
 	salt_input	= document.getElementById('salt'),
 	alg_input	= document.getElementById('algorithm'),
 	site_input	= document.getElementById('site');
 
 
 passshow.addEventListener('change', function () {
-	if (this.checked == true) {
+	if (this.checked === true) {
 		password.type = 'text';
 	} else {
 		password.type = 'password';
 	}
-})
+});
+
+dis_domain.addEventListener('change', function () {
+	if (this.checked === true) {
+		site_d.classList.add('hide');
+	} else {
+		site_d.classList.remove('hide');
+	}
+});
+
+
+
+/**
+ *
+ * callGenPass
+ *
+ * Вызов функции genPass с переданными параметрами,
+ * где среди параметров получение домена или его отсутствие в гостевом режиме
+ *
+ * @returns genPass()
+ *
+ */
+function callGenPass(tabChromeUrl){
+	return genPass(
+// @if NODE_ENV='chrome'
+		DATA['algorithm']||false,
+		password.value,
+		DATA['salt']||false,
+		(function() {
+			if (!dis_domain.checked && site_input.value) {
+				return 'http://'+site_input.value.replace(/https?:\/\//,'');
+			} else if (!dis_domain.checked) {
+				return tabChromeUrl;
+			} else {
+				return false;
+			}
+		})()
+// @endif
+// @if NODE_ENV='firefox'
+		self.options.algorithm,
+		password.value,
+		self.options.salt,
+		// TODO Добавить предупреждение, что будет браться текущий домен, если поле пустое
+		// window.location.href
+		(function() {
+			if (!dis_domain.checked && site_input.value) {
+				return 'http://'+site_input.value.replace(/https?:\/\//,'');
+			} else if (!dis_domain.checked) {
+				return self.options.url;
+			} else {
+				return false;
+			}
+		})()
+// @endif
+// @if NODE_ENV='online'
+		false,
+		password.value,
+		false,
+		// TODO Добавить предупреждение
+		// window.location.href
+		(function() {
+			if (!dis_domain.checked && site_input.value) {
+				return 'http://'+site_input.value.replace(/https?:\/\//,'');
+			} else {
+				return false;
+			}
+		})()
+// @endif
+	);
+}
+
 
 
 /**
@@ -70,7 +144,7 @@ function pbtnTabs() {
 	if(element.dataset.show){
 		element.addEventListener('click', pbtnTabs);
 	}
-})
+});
 
 function init(){
 	var rules = ['subdomain','trim','login'];
@@ -81,7 +155,7 @@ function init(){
 		rules_input.onchange = function(){
 			var obj = {};
 
-			if (search_domain() == false) {
+			if (search_domain() === false) {
 				DATA[DOMAIN] = {};
 			}
 			obj = DATA[DOMAIN];
@@ -140,7 +214,7 @@ if (typeof chrome !== "undefined"){
 		}
 
 		[].forEach.call(document.querySelectorAll('[data-l10n-id]'), function(el, i) {
-			el.innerHTML = chrome.i18n.getMessage(el.dataset.l10nId)
+			el.innerHTML = chrome.i18n.getMessage(el.dataset.l10nId);
 		});
 
 		chrome.tabs.query({currentWindow: true, active: true}, function(tab){
@@ -153,12 +227,7 @@ if (typeof chrome !== "undefined"){
 			passinsert.onclick = function(e){
 				chrome.tabs.sendMessage(
 					tab[0].id, {
-						pass: genPass(
-							DATA['algorithm']||false,
-							password.value,
-							DATA['salt']||false,
-							tab[0].url
-						)
+						pass: callGenPass(tab[0].url)
 					}
 				);
 				window.close();
@@ -167,23 +236,13 @@ if (typeof chrome !== "undefined"){
 				if (e.keyCode === 13) {
 					chrome.tabs.sendMessage(
 						tab[0].id, {
-							pass: genPass(
-								DATA['algorithm']||false,
-								password.value,
-								DATA['salt']||false,
-								tab[0].url
-							)
+							pass: callGenPass(tab[0].url)
 						}
 					);
 					window.close();
 				} else {
 					if (showpassbtn.classList.contains('active')) {
-						showpassi.value = genPass(
-							DATA['algorithm']||false,
-							password.value,
-							DATA['salt']||false,
-							tab[0].url
-						);
+						showpassi.value = callGenPass(tab[0].url);
 					}
 				}
 			}, false);
@@ -193,30 +252,20 @@ if (typeof chrome !== "undefined"){
 				const input = document.createElement('input');
 				input.style.position = 'fixed';
 				input.style.opacity = 0;
-				input.value = genPass(
-								DATA['algorithm']||false,
-								password.value,
-								DATA['salt']||false,
-								tab[0].url
-							);
+				input.value = callGenPass(tab[0].url);
 				document.body.appendChild(input);
 				input.select();
 				document.execCommand('Copy', false, null);
 				document.body.removeChild(input);
 				this.classList.add('ok');
-			})
+			});
 
 			showpassbtn.addEventListener('click', function click(event) {
-				showpassi.value = genPass(
-					DATA['algorithm']||false,
-					password.value,
-					DATA['salt']||false,
-					tab[0].url
-				);
-			})
+				showpassi.value = callGenPass(tab[0].url);
+			});
 
 		});
-	})
+	});
 
 	password.focus();
 // @endif
@@ -238,33 +287,18 @@ if (typeof chrome !== "undefined"){
 	passinsert.addEventListener('click', function click(event) {
 		self.port.emit(
 			"text-entered",
-			genPass(
-				self.options.algorithm
-				, password.value
-				, self.options.salt
-				, self.options.url
-			)
+			callGenPass()
 		);
 	}, false);
 	password.addEventListener("keyup", function(e) {
         if (e.keyCode === 13) {
             self.port.emit(
 				"text-entered",
-				genPass(
-					self.options.algorithm
-					, password.value
-					, self.options.salt
-					, self.options.url
-				)
+				callGenPass()
 			);
         } else {
 			if (showpassbtn.classList.contains('active')) {
-				showpassi.value = genPass(
-					self.options.algorithm
-					, password.value
-					, self.options.salt
-					, self.options.url
-				)
+				showpassi.value = callGenPass();
 			}
 		}
     }, false);
@@ -272,23 +306,13 @@ if (typeof chrome !== "undefined"){
 	copybtn.addEventListener('click', function click(event) {
 			this.classList.remove('ok');
 			this.offsetWidth = this.offsetWidth;
-			self.port.emit("copy", genPass(
-				self.options.algorithm
-				, password.value
-				, self.options.salt
-				, self.options.url
-			));
+			self.port.emit("copy", callGenPass());
 			this.classList.add('ok');
-	})
+	});
 
 	showpassbtn.addEventListener('click', function click(event) {
-		showpassi.value = genPass(
-			self.options.algorithm
-			, password.value
-			, self.options.salt
-			, self.options.url
-		);
-	})
+		showpassi.value = callGenPass();
+	});
 
 	self.port.on("show", function onShow() {
 		password.focus();
@@ -304,41 +328,17 @@ if (typeof chrome !== "undefined"){
 	[salt_input, password, alg_input].forEach(function(el){
 		el.addEventListener("keyup", function() {
 			if (showpassbtn.classList.contains('active')) {
-				showpassi.value = genPass(
-					false,
-					password.value,
-					false,
-					// TODO Добавить предупреждение
-					// window.location.href
-					(function() {
-						if (site_input.value) {
-							return 'http://'+site_input.value.replace(/https?:\/\//,'')
-						} else {
-							return false
-						}
-					})()
-				);
+				showpassi.value = callGenPass();
 			}
 		});
 	});
 	showpassbtn.addEventListener('click', function click(event) {
 		if (showpassbtn.classList.contains('active')) {
-			showpassi.value = genPass(
-				false,
-				password.value,
-				false,
-				(function() {
-					if (site_input.value) {
-						return 'http://'+site_input.value.replace(/https?:\/\//,'')
-					} else {
-						return false
-					}
-				})()
-			);
+			showpassi.value = callGenPass();
 		} else {
 			showpassi.value = "";
 		}
-	})
+	});
 // @endif
 
 
@@ -346,19 +346,28 @@ if (typeof chrome !== "undefined"){
  *
  * Gen Pasword from Algorithm
  *
+ * @param {string} a Algorithm, можно передавать false
+ * @param {string} pass Password
+ * @param {string} salt, можно передавать false
+ * @param {string} url
+ *
+ * @returns {string} MD5 password
+ *
  */
 function genPass(a,pass,salt,url){
+
 	var strAlg = ''
 		, l;
 
 	// Проверка заполненности полей в режиме гостя
-	a = alg_input.value || a || error_cfg();
-	salt = salt_input.value || salt || error_cfg();
+	a = alg_input.value || a || error_cfg('Не указан алгоритм', alg_input);
+	salt = salt_input.value || salt || error_cfg('Не указана соль', salt_input);
 
 	a = a.toLowerCase();
 	if (a.indexOf(' ') >= 0) {
 		a = a.split(' ');
 	}
+
 	l = a.length;
 	for(var i=0; i<l; i++){
 		strAlg += alg(
@@ -372,6 +381,7 @@ function genPass(a,pass,salt,url){
 		var sb = DATA[DOMAIN].trim.match(/(-?[0-9]+)(?:.*?(-?[0-9]+))?/);
 		return (hex_md5(pass+''+strAlg)).substr(sb[1],sb[2]);
 	}
+
 	return hex_md5(pass+''+strAlg);
 }
 
@@ -612,7 +622,7 @@ function search_domain() {
  * Return false
  */
 // TODO Переделать и расширить ошибки
-function error_cfg() {
+function error_cfg(text,el) {
 // @if NODE_ENV='chrome' || NODE_ENV='firefox'
 	if (!document.querySelector('#errorCFG')) {
 		var error = document.createElement('div');
@@ -624,6 +634,28 @@ function error_cfg() {
 	return false;
 // @endif
 // @if NODE_ENV='online'
-	return "";
+	if(el.nextSibling.className == 'error'){
+		errorEl = el.nextSibling;
+	} else {
+		errorEl = document.createElement('div');
+		errorEl.className = 'error';
+		el.parentNode.insertBefore(errorEl, el.nextSibling);
+	}
+	errorEl.dataset.time = 3000;
+	errorEl.innerHTML = text;
+	error_remove(errorEl);
+	return false;
 // @endif
+}
+function error_remove(el,time){
+	time = time || el.dataset.time || 3000;
+	setTimeout(function(){
+		time = el.dataset.time;
+		el.dataset.time = 0;
+		if(time <= 0 ){
+			el.remove();
+		} else {
+			error_remove(el);
+		}
+	},time);
 }

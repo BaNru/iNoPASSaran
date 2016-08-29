@@ -12,8 +12,13 @@
 <form autocomplete="off">
 	<fieldset id="pswd">
 		<h1>¡No PASSarán Online</h1>
-		<label for="site" data-l10n-id="domain_title">Домен</label>
-		<input id="site">
+		<input id="dis_domain" type="checkbox">
+		<label for="dis_domain" data-l10n-id="dis_domain">Забыть про домен</label>
+
+		<fieldset id="site_d">
+			<label for="site" data-l10n-id="domain_title">Домен</label>
+			<input id="site">
+		</fieldset>
 
 		<label for="salt" data-l10n-id="salt_title">Соль</label>
 		<input id="salt">
@@ -60,12 +65,7 @@
 	var client = new ZeroClipboard(document.getElementById("copy"));
 	client.on("ready", function(){
 		client.on("beforecopy", function(){
-			ZeroClipboard.setData( "text/plain", genPass(
-				false,
-				password.value,
-				false,
-				window.location.href
-			));
+			ZeroClipboard.setData( "text/plain", callGenPass());
 		});
 		client.on("aftercopy", function(event){
 			event.target.classList.remove('ok');

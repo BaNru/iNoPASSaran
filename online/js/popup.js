@@ -1,3 +1,5 @@
+/* jshint -W100 */
+// TODO Сделать форму шире, в ширину MD5 строки (32 символа), чтобы умещалась вся строка
 var DATA, DOMAIN,
 	password	= document.getElementById('password'),
 	passinsert	= document.getElementById('passinsert'),
@@ -8,18 +10,28 @@ var DATA, DOMAIN,
 	copybtn		= document.getElementById('copy'),
 	pbtn		= document.querySelectorAll('.pbtn li'),
 	pbtnH		= document.querySelectorAll('.pbtnH'),
+	dis_domain	= document.getElementById('dis_domain'),
+	site_d		= document.getElementById('site_d'),
 	salt_input	= document.getElementById('salt'),
 	alg_input	= document.getElementById('algorithm'),
 	site_input	= document.getElementById('site');
 
 
 passshow.addEventListener('change', function () {
-	if (this.checked == true) {
+	if (this.checked === true) {
 		password.type = 'text';
 	} else {
 		password.type = 'password';
 	}
-})
+});
+
+dis_domain.addEventListener('change', function () {
+	if (this.checked === true) {
+		site_d.classList.add('hide');
+	} else {
+		site_d.classList.remove('hide');
+	}
+});
 
 
 /**
@@ -55,7 +67,7 @@ function pbtnTabs() {
 	if(element.dataset.show){
 		element.addEventListener('click', pbtnTabs);
 	}
-})
+});
 
 function init(){
 	var rules = ['subdomain','trim','login'];
@@ -66,7 +78,7 @@ function init(){
 		rules_input.onchange = function(){
 			var obj = {};
 
-			if (search_domain() == false) {
+			if (search_domain() === false) {
 				DATA[DOMAIN] = {};
 			}
 			obj = DATA[DOMAIN];
@@ -88,66 +100,75 @@ function init(){
 }
 
 
+/**
+ *
+ * callGenPass
+ *
+ * Call function GenPass
+ *
+ */
+function callGenPass() {
+	return genPass(
+		false,
+		password.value,
+		false,
+		// TODO Добавить предупреждение
+		// window.location.href
+		(function() {
+			if (!dis_domain.checked && site_input.value) {
+				return 'http://'+site_input.value.replace(/https?:\/\//,'');
+			} else {
+				return false;
+			}
+		})()
+	);
+}
+
 	init();
 	DOMAIN = new URL(window.location.href).hostname;
 	DATA = {};
 	[salt_input, password, alg_input].forEach(function(el){
 		el.addEventListener("keyup", function() {
 			if (showpassbtn.classList.contains('active')) {
-				showpassi.value = genPass(
-					false,
-					password.value,
-					false,
-					// TODO Добавить предупреждение
-					// window.location.href
-					(function() {
-						if (site_input.value) {
-							return 'http://'+site_input.value.replace(/https?:\/\//,'')
-						} else {
-							return false
-						}
-					})()
-				);
+				showpassi.value = callGenPass();
 			}
 		});
 	});
 	showpassbtn.addEventListener('click', function click(event) {
 		if (showpassbtn.classList.contains('active')) {
-			showpassi.value = genPass(
-				false,
-				password.value,
-				false,
-				(function() {
-					if (site_input.value) {
-						return 'http://'+site_input.value.replace(/https?:\/\//,'')
-					} else {
-						return false
-					}
-				})()
-			);
+			showpassi.value = callGenPass();
 		} else {
 			showpassi.value = "";
 		}
-	})
+	});
 
 
 /**
  *
  * Gen Pasword from Algorithm
  *
+ * @param {string} a Algorithm
+ * @param {string} pass Password
+ * @param {string} salt
+ * @param {string} url
+ *
+ * @returns {string} MD5 password
+ *
  */
 function genPass(a,pass,salt,url){
+
 	var strAlg = ''
 		, l;
 
 	// Проверка заполненности полей в режиме гостя
-	a = alg_input.value || a || error_cfg();
-	salt = salt_input.value || salt || error_cfg();
+	a = alg_input.value || a || error_cfg('Не указан алгоритм', alg_input);
+	salt = salt_input.value || salt || error_cfg('Не указана соль', salt_input);
 
 	a = a.toLowerCase();
 	if (a.indexOf(' ') >= 0) {
 		a = a.split(' ');
 	}
+
 	l = a.length;
 	for(var i=0; i<l; i++){
 		strAlg += alg(
@@ -161,6 +182,7 @@ function genPass(a,pass,salt,url){
 		var sb = DATA[DOMAIN].trim.match(/(-?[0-9]+)(?:.*?(-?[0-9]+))?/);
 		return (hex_md5(pass+''+strAlg)).substr(sb[1],sb[2]);
 	}
+
 	return hex_md5(pass+''+strAlg);
 }
 
@@ -401,6 +423,28 @@ function search_domain() {
  * Return false
  */
 // TODO Переделать и расширить ошибки
-function error_cfg() {
-	return "";
+function error_cfg(text,el) {
+	if(el.nextSibling.className == 'error'){
+		errorEl = el.nextSibling;
+	} else {
+		errorEl = document.createElement('div');
+		errorEl.className = 'error';
+		el.parentNode.insertBefore(errorEl, el.nextSibling);
+	}
+	errorEl.dataset.time = 3000;
+	errorEl.innerHTML = text;
+	error_remove(errorEl);
+	return false;
+}
+function error_remove(el,time){
+	time = time || el.dataset.time || 3000;
+	setTimeout(function(){
+		time = el.dataset.time;
+		el.dataset.time = 0;
+		if(time <= 0 ){
+			el.remove();
+		} else {
+			error_remove(el);
+		}
+	},time);
 }
