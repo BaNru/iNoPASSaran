@@ -34,6 +34,36 @@ dis_domain.addEventListener('change', function () {
 });
 
 
+
+/**
+ *
+ * callGenPass
+ *
+ * Вызов функции genPass с переданными параметрами,
+ * где среди параметров получение домена или его отсутствие в гостевом режиме
+ *
+ * @returns genPass()
+ *
+ */
+function callGenPass(tabChromeUrl){
+	return genPass(
+		false,
+		password.value,
+		false,
+		// TODO Добавить предупреждение
+		// window.location.href
+		(function() {
+			if (!dis_domain.checked && site_input.value) {
+				return 'http://'+site_input.value.replace(/https?:\/\//,'');
+			} else {
+				return false;
+			}
+		})()
+	);
+}
+
+
+
 /**
  *
  * pbtnTabs
@@ -100,34 +130,10 @@ function init(){
 }
 
 
-/**
- *
- * callGenPass
- *
- * Call function GenPass
- *
- */
-function callGenPass() {
-	return genPass(
-		false,
-		password.value,
-		false,
-		// TODO Добавить предупреждение
-		// window.location.href
-		(function() {
-			if (!dis_domain.checked && site_input.value) {
-				return 'http://'+site_input.value.replace(/https?:\/\//,'');
-			} else {
-				return false;
-			}
-		})()
-	);
-}
-
 	init();
 	DOMAIN = new URL(window.location.href).hostname;
 	DATA = {};
-	[salt_input, password, alg_input].forEach(function(el){
+	[site_input, salt_input, password, alg_input].forEach(function(el){
 		el.addEventListener("keyup", function() {
 			if (showpassbtn.classList.contains('active')) {
 				showpassi.value = callGenPass();
@@ -141,15 +147,20 @@ function callGenPass() {
 			showpassi.value = "";
 		}
 	});
+	dis_domain.addEventListener('click', function click(event) {
+		if (showpassbtn.classList.contains('active')) {
+			showpassi.value = callGenPass();
+		}
+	});
 
 
 /**
  *
  * Gen Pasword from Algorithm
  *
- * @param {string} a Algorithm
+ * @param {string} a Algorithm, можно передавать false
  * @param {string} pass Password
- * @param {string} salt
+ * @param {string} salt, можно передавать false
  * @param {string} url
  *
  * @returns {string} MD5 password

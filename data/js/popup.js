@@ -325,7 +325,7 @@ if (typeof chrome !== "undefined"){
 	init();
 	DOMAIN = new URL(window.location.href).hostname;
 	DATA = {};
-	[salt_input, password, alg_input].forEach(function(el){
+	[site_input, salt_input, password, alg_input].forEach(function(el){
 		el.addEventListener("keyup", function() {
 			if (showpassbtn.classList.contains('active')) {
 				showpassi.value = callGenPass();
@@ -337,6 +337,11 @@ if (typeof chrome !== "undefined"){
 			showpassi.value = callGenPass();
 		} else {
 			showpassi.value = "";
+		}
+	});
+	dis_domain.addEventListener('click', function click(event) {
+		if (showpassbtn.classList.contains('active')) {
+			showpassi.value = callGenPass();
 		}
 	});
 // @endif
