@@ -19,14 +19,16 @@ Download
 
 ### Стабильная версия
 
-- [Плагин для Chrome и Opera v1.3](https://github.com/BaNru/iNoPASSaran/releases/download/1.3/Chrome.Opera.iNoPASSaran-1.3.crx)
-- [Плагин для Firefox v1.3](https://github.com/BaNru/iNoPASSaran/releases/download/1.3/Firefox.inopassaran-1.3.xpi)
-  - (Рекомендуется) Также можно установить из официального репозитория FireFox с [addons.mozilla.org](https://addons.mozilla.org/en-US/firefox/addon/inopassaran/)
+- На GitHub [Плагин для Chrome и Opera v1.3](https://github.com/BaNru/iNoPASSaran/releases/download/1.3/Chrome.Opera.iNoPASSaran-1.3.crx)
+- Из официального репозитория FireFox с [addons.mozilla.org](https://addons.mozilla.org/en-US/firefox/addon/inopassaran/)
+  - На GitHub [Плагин для Firefox v1.3](https://github.com/BaNru/iNoPASSaran/releases/download/1.3/Firefox.inopassaran-1.3.xpi)
+
 
 ### Бета версия
 
-- [Плагин для Chrome и Opera v1.4beta](https://github.com/BaNru/iNoPASSaran/releases/download/1.4beta/Chrome.Opera.iNoPASSaran-1.4beta.crx)
-- [Плагин для Firefox v1.4beta](https://github.com/BaNru/iNoPASSaran/releases/download/1.4beta/Firefox.inopassaran-1.4beta.xpi)
+- В Google WebStore [Плагин для Chrome и Opera v1.4.0 (beta)](https://chrome.google.com/webstore/detail/%C2%A1no-passar%C3%A1n/njnoikolijcmeaaimkfefjmddeednjpi)
+  - На GitHub [Плагин для Chrome и Opera v1.4.0 (beta)](https://github.com/BaNru/iNoPASSaran/releases/download/1.4beta/Chrome.Opera.iNoPASSaran-1.4beta.crx)
+- На GitHub [Плагин для Firefox v1.4beta](https://github.com/BaNru/iNoPASSaran/releases/download/1.4beta/Firefox.inopassaran-1.4beta.xpi)
 
 
 Что это?
