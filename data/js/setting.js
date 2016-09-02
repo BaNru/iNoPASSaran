@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', function() {
 	chrome.storage.local.get(function (result) {
 		GeneratorRex(chrome.i18n.getMessage('salt_title'), 'salt', result.salt||'');
 		GeneratorRex(chrome.i18n.getMessage('algorithm_title'), 'algorithm', result.algorithm||'');
+
+		GenHashList(result.hashtype, true);
 	});
 
 });

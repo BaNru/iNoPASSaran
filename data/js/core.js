@@ -63,7 +63,7 @@ function GeneratorRex(l,n,v) {
 	var label, input, intervalId = '';
 
 	label = document.createElement('label');
-	label.innerHTML = l;
+	label.textContent = l;
 
 	input = document.createElement('input');
 	input.name = n;

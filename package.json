@@ -28,5 +28,24 @@
 		"type": "string",
 		"value": "",
 		"hidden": true
+	},{
+		"name": "hashtype",
+		"title": "Тип шифрования",
+		"type": "menulist",
+		"value": "md5",
+		"options": [
+			{
+				"value": "md5",
+				"label": "MD5"
+			},
+			{
+				"value": "ysp0",
+				"label": "You Shall Pass"
+			},
+			{
+				"value": "ysp1",
+				"label": "You Shall Pass #"
+			}
+		]
 	}]
 }

@@ -41,6 +41,10 @@
 	},
 	"domain_title" : {
 		"message" : "Domain name"
+	},
+	
+	"hash_type" : {
+		"message" : "Hash type"
 	}
 
 }

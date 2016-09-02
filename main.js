@@ -19,10 +19,14 @@ function handleClick(state) {
 				algorithm	: preferences.algorithm,
 				salt		: preferences.salt,
 				data		: preferences.data,
-				url			: tabs.activeTab.url
+				hashtype	: preferences.hashtype,
+				url			: tabs.activeTab.url,
+				_ : require("sdk/l10n").get
 			},
 			contentScriptFile: [
 				"./js/md5-min.js",
+				"./js/you_shall_pass.js",
+				"./js/functions.js",
 				"./js/popup.js"
 			],
 			width: 250,

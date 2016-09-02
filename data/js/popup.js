@@ -1,5 +1,6 @@
 /* jshint -W100 */
 // TODO Сделать форму шире, в ширину MD5 строки (32 символа), чтобы умещалась вся строка
+// TODO рассмотреть возможность с помощью мастер пароля шифровать соль, алгоритм и базу.
 var DATA, DOMAIN,
 	password	= document.getElementById('password'),
 	passinsert	= document.getElementById('passinsert'),
@@ -265,6 +266,8 @@ if (typeof chrome !== "undefined"){
 			});
 
 		});
+
+		GenHashList(DATA['hashtype']);
 	});
 
 	password.focus();
@@ -313,6 +316,8 @@ if (typeof chrome !== "undefined"){
 	showpassbtn.addEventListener('click', function click(event) {
 		showpassi.value = callGenPass();
 	});
+	
+	GenHashList(self.options.hashtype);
 
 	self.port.on("show", function onShow() {
 		password.focus();
@@ -344,6 +349,8 @@ if (typeof chrome !== "undefined"){
 			showpassi.value = callGenPass();
 		}
 	});
+	
+	GenHashList('md5');
 // @endif
 
 

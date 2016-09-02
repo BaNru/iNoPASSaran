@@ -41,7 +41,9 @@
 	},
 	"domain_title" : {
 		"message" : "Домен"
+	},
+
+	"hash_type" : {
+		"message" : "Тип шифрования"
 	}
-
-
 }
