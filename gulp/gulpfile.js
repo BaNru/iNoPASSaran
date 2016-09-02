@@ -33,13 +33,16 @@ gulp.task('firefox', function() {
 	gulp.src('../data/popup.html')
 		.pipe(preprocess({context: { NODE_ENV: 'firefox', DEBUG: false}}))
 		.pipe(gulp.dest('../firefox/data/'));
+
+	gulp.src(['../data/js/*','!../data/js/popup.js','!../data/js/core.js','!../data/js/page.js']).pipe(gulp.dest('../firefox/data/js/'));
+
 	gulp.src('../data/js/popup.js')
 		.pipe(preprocess({context: { NODE_ENV: 'firefox', DEBUG: false}}))
 		.pipe(strip())
 		.pipe(gulp.dest('../firefox/data/js/'));
 
 	gulp.src(['../main.js','../package.json']).pipe(gulp.dest('../firefox/'));
-	gulp.src('../data/js/md5-min.js').pipe(gulp.dest('../firefox/data/js/'));
+
 	gulp.src('../data/css/*').pipe(gulp.dest('../firefox/data/css/'));
 	gulp.src('../data/img/*.*').pipe(gulp.dest('../firefox/data/img/'));
 	gulp.src('../data/img/icon/*').pipe(gulp.dest('../firefox/data/img/icon/'));
