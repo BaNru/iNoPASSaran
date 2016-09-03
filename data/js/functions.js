@@ -16,6 +16,12 @@ function GenHashList(hash, save){
 			},{
 				value: 'ysp1',
 				title: 'You Shall Pass #'
+			},{
+				value: 'ysp2',
+				title: 'You Shall Pass Original'
+			},{
+				value: 'ysp3',
+				title: 'You Shall Pass Original #'
 			}];
 
 	list.forEach(function(el, i) {

@@ -15,7 +15,8 @@ var DATA, DOMAIN,
 	site_d		= document.getElementById('site_d'),
 	salt_input	= document.getElementById('salt'),
 	alg_input	= document.getElementById('algorithm'),
-	site_input	= document.getElementById('site');
+	site_input	= document.getElementById('site'),
+	hashtypeS	= document.getElementById('hashtype');
 
 
 passshow.addEventListener('change', function () {
@@ -368,33 +369,53 @@ if (typeof chrome !== "undefined"){
  */
 function genPass(a,pass,salt,url){
 
-	var strAlg = ''
-		, l;
+	var strAlg = '',
+		l, sb, genHash;
 
 	// Проверка заполненности полей в режиме гостя
 	a = alg_input.value || a || error_cfg('Не указан алгоритм', alg_input);
 	salt = salt_input.value || salt || error_cfg('Не указана соль', salt_input);
 
-	a = a.toLowerCase();
-	if (a.indexOf(' ') >= 0) {
-		a = a.split(' ');
-	}
+	// Выбор типа шифрования
+	hash = hashtypeS.value || 'md5';
+	// Оригинальный You Shall Pass
+	if(hash === 'ysp2' || hash === 'ysp3'){
+		strAlg = pass + (new URL(url)).hostname.replace('www.','').toLowerCase() + pass;
+		if(hash === 'ysp2'){
+			genHash = ysp(strAlg,false);
+		} else {
+			genHash = ysp(strAlg,true);
+		}
+	} else {
+		a = a.toLowerCase();
+		if (a.indexOf(' ') >= 0) {
+			a = a.split(' ');
+		}
 
-	l = a.length;
-	for(var i=0; i<l; i++){
-		strAlg += alg(
-			a[i],
-			pass,
-			salt,
-			url
-		);
+		l = a.length;
+		for(var i=0; i<l; i++){
+			strAlg += alg(
+				a[i],
+				pass,
+				salt,
+				url
+			);
+		}
+		// You Shall Pass
+		if(hash === 'ysp0'){
+			genHash = ysp(pass+''+strAlg,false);
+		} else if (hash === 'ysp1'){
+			genHash = ysp(pass+''+strAlg,true);
+		} else { // По умолчанию, MD5
+			genHash = hex_md5(pass+''+strAlg);
+		}
 	}
+	// Обрезаем, если требуется
 	if (DATA && DATA[DOMAIN] && DATA[DOMAIN].trim) {
-		var sb = DATA[DOMAIN].trim.match(/(-?[0-9]+)(?:.*?(-?[0-9]+))?/);
-		return (hex_md5(pass+''+strAlg)).substr(sb[1],sb[2]);
+		sb = DATA[DOMAIN].trim.match(/(-?[0-9]+)(?:.*?(-?[0-9]+))?/);
+		genHash = genHash.substr(sb[1],sb[2]);
 	}
-
-	return hex_md5(pass+''+strAlg);
+	return genHash;
 }
 
 

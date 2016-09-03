@@ -3,9 +3,11 @@
  *
  * @author Vladimir Kochergin (wawan93)
  * https://github.com/wawan93/you_shall_pass
+ *
+ * @param salt {string}
+ * @param {bollean} a - special chars on/off
  */
-function ysp(s,mp,a) {
-	var salt = mp+s+mp;
+function ysp(salt,a) {
 	var alphabet;
 	if(a) {
 		alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*([{}])_+~-'+'1234567890abcdefghijklmnopqrstuvwxyz!@#$%^&*([{}])_+~-ABCDEFGHIJKLMNOPQRSTUVWXYZ';
