@@ -471,7 +471,7 @@ function algDomain(url) {
 	if (search_domain() && DATA[DOMAIN] && DATA[DOMAIN].subdomain) {
 		tURL = tURL.substring(tURL.lastIndexOf(".", tURL.lastIndexOf(".") - 1) + 1);
 	}
-	return tURL.match(/(.*)\.(.*$)/);
+	return tURL.match(/(.*)\.(.*$)/) || ["","",""];
 }
 
 
