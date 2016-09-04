@@ -16,7 +16,8 @@ var DATA, DOMAIN,
 	salt_input	= document.getElementById('salt'),
 	alg_input	= document.getElementById('algorithm'),
 	site_input	= document.getElementById('site'),
-	hashtypeS	= document.getElementById('hashtype');
+	hashtypeS	= document.getElementById('hashtype'),
+	hashtypeSA	= document.getElementById('hashtypeA');
 
 
 passshow.addEventListener('change', function () {
@@ -96,6 +97,40 @@ function callGenPass(tabChromeUrl){
 	);
 }
 
+/*
+ * Сохранение настроек для текущего сайт
+ */
+function saveSiteSetting(t,el){
+	var obj = {};
+
+	if (search_domain() === false) {
+		DATA[DOMAIN] = {};
+	}
+	obj = DATA[DOMAIN];
+
+	if (t.type == "checkbox") {
+		obj[el] = t.checked;
+	} else {
+		obj[el] = t.value;
+	}
+// @exclude
+	if (typeof chrome !== "undefined"){
+// @endexclude
+// @if NODE_ENV='chrome'
+		saveSetting(DOMAIN,obj);
+// @endif
+// @exclude
+	} else {
+// @endexclude
+// @if NODE_ENV='firefox'
+		DATA[DOMAIN] = obj;
+		self.options.data = JSON.stringify(DATA);
+		self.port.emit("update", self.options.data);
+// @endif
+// @exclude
+	}
+// @endexclude
+}
 
 
 /**
@@ -149,42 +184,12 @@ function pbtnTabs() {
 });
 
 function init(){
-	var rules = ['subdomain','trim','login'];
+	var rules = ['subdomain','trim','login','hashtype'];
 
 	rules.forEach(function(el, i) {
 		var rules_input = document.getElementById(el);
 
-		rules_input.onchange = function(){
-			var obj = {};
-
-			if (search_domain() === false) {
-				DATA[DOMAIN] = {};
-			}
-			obj = DATA[DOMAIN];
-
-			if (this.type == "checkbox") {
-				obj[el] = this.checked;
-			} else {
-				obj[el] = this.value;
-			}
-// @exclude
-			if (typeof chrome !== "undefined"){
-// @endexclude
-// @if NODE_ENV='chrome'
-				saveSetting(DOMAIN,obj);
-// @endif
-// @exclude
-			} else {
-// @endexclude
-// @if NODE_ENV='firefox'
-				DATA[DOMAIN] = obj;
-				self.options.data = JSON.stringify(DATA);
-				self.port.emit("update", self.options.data);
-// @endif
-// @exclude
-			}
-// @endexclude
-		};
+		rules_input.onchange = function(){saveSiteSetting(this,el);};
 		if (DATA && DATA[DOMAIN] && DATA[DOMAIN][el]) {
 			if (typeof DATA[DOMAIN][el] === "boolean") {
 				rules_input.checked = DATA[DOMAIN][el];
@@ -269,6 +274,7 @@ if (typeof chrome !== "undefined"){
 		});
 
 		GenHashList(DATA['hashtype']);
+		GenHashList(DATA['hashtype'],false,'hashtypeA');
 	});
 
 	password.focus();
@@ -319,6 +325,7 @@ if (typeof chrome !== "undefined"){
 	});
 	
 	GenHashList(self.options.hashtype);
+	GenHashList(self.options.hashtype,false,'hashtypeA');
 
 	self.port.on("show", function onShow() {
 		password.focus();
@@ -328,7 +335,6 @@ if (typeof chrome !== "undefined"){
 }
 // @endexclude
 // @if NODE_ENV='online'
-	init();
 	DOMAIN = new URL(window.location.href).hostname;
 	DATA = {};
 	[site_input, salt_input, password, alg_input].forEach(function(el){
@@ -350,9 +356,18 @@ if (typeof chrome !== "undefined"){
 			showpassi.value = callGenPass();
 		}
 	});
-	
-	GenHashList('md5');
+
+	GenHashList('md5',false,'hashtypeA');
 // @endif
+
+hashtypeSA.addEventListener('change', function(){
+	this.dataset.change = 'true';
+	if (showpassbtn.classList.contains('active')) {
+		showpassi.value = callGenPass();
+	} else {
+		showpassi.value = "";
+	}
+});
 
 
 /**
@@ -377,7 +392,8 @@ function genPass(a,pass,salt,url){
 	salt = salt_input.value || salt || error_cfg('Не указана соль', salt_input);
 
 	// Выбор типа шифрования
-	hash = hashtypeS.value || 'md5';
+	hash = (hashtypeSA.dataset.change && hashtypeSA.value) || (hashtypeS && hashtypeS.value) || 'md5';
+
 	// Оригинальный You Shall Pass
 	if(hash === 'ysp2' || hash === 'ysp3'){
 		strAlg = pass + (new URL(url)).hostname.replace('www.','').toLowerCase() + pass;

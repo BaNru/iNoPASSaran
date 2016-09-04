@@ -2,11 +2,12 @@
  * Генерация списка с типами шифрования (хеширования)
  *
  * @param тип шифрования
- * @param текст для label
- * @param {boolean} необязательный параметр, сохранение для Хрома
+ * @param hash тип шифрования
+ * @param {boolean}, необязательный параметр, сохранение для Хрома
+ * @param ID родителя, еобязательный параметр
  */
-function GenHashList(hash, save){
-	var select = document.getElementById('hashtype'),
+function GenHashList(hash, save, id){
+	var select = document.getElementById(id) || document.getElementById('hashtype'),
 		list = [{
 				value: 'md5',
 				title: 'MD5'

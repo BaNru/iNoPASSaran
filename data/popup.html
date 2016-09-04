@@ -33,10 +33,10 @@
 	<fieldset id="filters" class="hide pbtnH">
 		<input id="subdomain" type="checkbox">
 		<label for="subdomain" data-l10n-id="subdomain">Отключить поддомены</label>
-
+<!-- @if NODE_ENV='chrome' || NODE_ENV='firefox' -->
 		<label for="hashtype" data-l10n-id="hash_type">Тип шифрования</label>
 		<select id="hashtype"></select>
-
+<!-- @endif -->
 		<label for="trim" data-l10n-id="trim">Обрезать</label>
 		<input id="trim">
 
@@ -72,7 +72,7 @@
 <script type="text/javascript" src="js/popup.js"></script>
 <!-- @endif -->
 <!-- @if NODE_ENV='online' -->
-<script type="text/javascript" src="js/functions.js"></script>
+<script type="text/javascript" src="../data/js/functions.js"></script>
 <script type="text/javascript" src="../data/js/md5-min.js"></script>
 <script type="text/javascript" src="../data/js/you_shall_pass.js"></script>
 <script type="text/javascript" src="js/popup.js"></script>
