@@ -33,19 +33,21 @@
 		"title": "Тип шифрования",
 		"type": "menulist",
 		"value": "md5",
-		"options": [
-			{
+		"options": [{
 				"value": "md5",
 				"label": "MD5"
-			},
-			{
+			},{
 				"value": "ysp0",
 				"label": "You Shall Pass"
-			},
-			{
+			},{
 				"value": "ysp1",
 				"label": "You Shall Pass #"
-			}
-		]
+			},{
+				"value": "ysp2",
+				"label": "You Shall Pass Original"
+			},{
+				"value": "ysp3",
+				"label": "You Shall Pass Original #"
+		}]
 	}]
 }
