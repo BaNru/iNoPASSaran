@@ -396,6 +396,10 @@ function genPass(a,pass,salt,url){
 
 	// Оригинальный You Shall Pass
 	if(hash === 'ysp2' || hash === 'ysp3'){
+		if(!url){
+			error_cfg('Для данного типа шифрования обязательно указывать домен (адрес сайта)', hashtypeSA);
+			return 'ERROR!';
+		}
 		strAlg = pass + (new URL(url)).hostname.replace('www.','').toLowerCase() + pass;
 		if(hash === 'ysp2'){
 			genHash = ysp(strAlg,false);
@@ -403,6 +407,13 @@ function genPass(a,pass,salt,url){
 			genHash = ysp(strAlg,true);
 		}
 	} else {
+		if(!url && !dis_domain.checked){
+			error_cfg('Введите домен', site_d);
+			return 'ERROR!';
+		}
+		if(!a){
+			return 'ERROR!';
+		}
 		a = a.toLowerCase();
 		if (a.indexOf(' ') >= 0) {
 			a = a.split(' ');
@@ -417,6 +428,7 @@ function genPass(a,pass,salt,url){
 				url
 			);
 		}
+
 		// You Shall Pass
 		if(hash === 'ysp0'){
 			genHash = ysp(pass+''+strAlg,false);
@@ -680,7 +692,6 @@ function error_cfg(text,el) {
 		error.innerHTML = "Ошибка в настройках плагина!<br>Вероятно не введены данные!";
 		document.getElementById('pswd').appendChild(error);
 	}
-	return false;
 // @endif
 // @if NODE_ENV='online'
 	if(el.nextSibling.className == 'error'){
@@ -693,8 +704,8 @@ function error_cfg(text,el) {
 	errorEl.dataset.time = 3000;
 	errorEl.innerHTML = text;
 	error_remove(errorEl);
-	return false;
 // @endif
+	return false;
 }
 function error_remove(el,time){
 	time = time || el.dataset.time || 3000;
