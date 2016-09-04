@@ -221,7 +221,7 @@ if (typeof chrome !== "undefined"){
 		}
 
 		[].forEach.call(document.querySelectorAll('[data-l10n-id]'), function(el, i) {
-			el.innerHTML = chrome.i18n.getMessage(el.dataset.l10nId);
+			el.textContent = chrome.i18n.getMessage(el.dataset.l10nId);
 		});
 
 		chrome.tabs.query({currentWindow: true, active: true}, function(tab){

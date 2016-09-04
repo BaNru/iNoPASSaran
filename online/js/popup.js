@@ -169,7 +169,6 @@ hashtypeSA.addEventListener('change', function(){
 		showpassi.value = "";
 	}
 });
-	
 
 
 /**
