@@ -4,7 +4,7 @@
 	"description": "Password manager and generator addon for browser",
 	"author": "BaNru",
 	"license": "MPL 2.0",
-	"version": "1.4beta",
+	"version": "1.5-beta",
 	"homepage": "https://github.com/BaNru/iNoPASSaran",
 	"engines": {
 		"firefox": ">=38.0a1"
