@@ -544,42 +544,42 @@ function alg(a,pass,salt,url) {
 
 	if (['0', 'a', 'k', 'u', 'а', 'й', 'у', 'э'].indexOf(a) >= 0){
 		return algDomain(url)[1];
-	};
+	}
 	if (['1', 'b', 'l', 'v', 'б', 'к', 'ф', 'ю'].indexOf(a) >= 0){
 		return algDomain(url)[2];
-	};
+	}
 	if (['2', 'c', 'm', 'w', 'в', 'л', 'х', 'я'].indexOf(a) >= 0){
-		return halfString(algDomain(url)[1])[0]
-	};
+		return halfString(algDomain(url)[1])[0];
+	}
 	if (['3', 'd', 'n', 'x', 'г', 'м', 'ц'].indexOf(a) >= 0){
-		return halfString(algDomain(url)[1])[1]
-	};
+		return halfString(algDomain(url)[1])[1];
+	}
 	if (['4', 'e', 'o', 'y', 'д', 'н', 'ч'].indexOf(a) >= 0){
 		if (algDomain(url)[1].length > 0) {
 			return algDomain(url)[1].length;
 		} else {
 			return "";
 		}
-	};
+	}
 	if (['5', 'f', 'p', 'z', 'е', 'о', 'ш'].indexOf(a) >= 0){
 		if (algDomain(url)[2].length > 0) {
 			return algDomain(url)[2].length;
 		} else {
 			return "";
 		}
-	};
+	}
 	if (['6', 'g', 'q', 'ё', 'п', 'щ'].indexOf(a) >= 0){
 		return salt;
-	};
+	}
 	if (['7', 'h', 'r', 'ж', 'р', 'ъ'].indexOf(a) >= 0){
 		return pass;
-	};
+	}
 	if (['8', 'i', 's', 'з', 'с', 'ы'].indexOf(a) >= 0){
 		return halfString(pass)[0];
-	};
+	}
 	if (['9', 'j', 't', 'и', 'т', 'ь'].indexOf(a) >= 0){
 		return halfString(pass)[1];
-	};
+	}
 
 	// Extended
 	if (a == 10) {
@@ -589,10 +589,10 @@ function alg(a,pass,salt,url) {
 		return reverseString(algDomain(url)[2]);
 	}
 	if (a == 12) {
-		return reverseString(halfString(algDomain(url)[1])[0])
+		return reverseString(halfString(algDomain(url)[1])[0]);
 	}
 	if (a == 13) {
-		return reverseString(halfString(algDomain(url)[1])[1])
+		return reverseString(halfString(algDomain(url)[1])[1]);
 	}
 	if (a == 14) {}
 	if (a == 15) {}
