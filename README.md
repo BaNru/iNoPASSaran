@@ -1,7 +1,7 @@
 ¡No PASSarán
 ============
 
-- **[Download](#download)**
+- **[Download / Install](#download)**
 - **[Что это?](#wtf)**
 - **[Преимущества](#advantages)**
 - **[Установка](#install)**
@@ -14,7 +14,7 @@
 - **[TODO](#todo)**
 
 
-Download
+Download / Install
 --------
 
 ### Стабильная версия
@@ -26,9 +26,10 @@ Download
 
 ### Бета версия
 
-- В Google WebStore [Плагин для Chrome и Opera v1.4.0 (beta)](https://chrome.google.com/webstore/detail/%C2%A1no-passar%C3%A1n/njnoikolijcmeaaimkfefjmddeednjpi)
-  - На GitHub [Плагин для Chrome и Opera v1.4.0 (beta)](https://github.com/BaNru/iNoPASSaran/releases/download/1.4beta/Chrome.Opera.iNoPASSaran-1.4beta.crx)
-- На GitHub [Плагин для Firefox v1.4beta](https://github.com/BaNru/iNoPASSaran/releases/download/1.4beta/Firefox.inopassaran-1.4beta.xpi)
+- В Google WebStore [Плагин для Chrome и Opera v1.5.0 (beta)](https://chrome.google.com/webstore/detail/%C2%A1no-passar%C3%A1n/njnoikolijcmeaaimkfefjmddeednjpi)
+  - На GitHub [Плагин для Chrome и Opera v1.5 (beta)](https://github.com/BaNru/iNoPASSaran/releases/download/1.5-beta/Chrome.Opera.iNoPASSaran-1.5-beta.crx)
+- Из официального репозитория FireFox с [addons.mozilla.org версия 1.5-beta](https://addons.mozilla.org/en-US/firefox/addon/inopassaran/versions/1.5-beta)
+  - На GitHub [Плагин для Firefox v1.5-beta](https://github.com/BaNru/iNoPASSaran/releases/download/1.5-beta/Firefox.iNoPASSaran-1.5-beta.xpi)
 
 
 Что это?
@@ -71,15 +72,6 @@ Download
 онлайн генератором (**на свой страх и риск!!!**).
 5. **Это плагин для вашего любимого браузера**. Больше нет необходимости
 переключаться в сторонние программы.
-
-
-Установка
----------
-
-Загрузите версию плагина для вашего браузера и разрешите установку:
-- [Плагин для Chrome и Opera v1.3](https://github.com/BaNru/iNoPASSaran/releases/download/1.3/Chrome.Opera.iNoPASSaran-1.3.crx)
-- [Плагин для Firefox v1.3](https://github.com/BaNru/iNoPASSaran/releases/download/1.3/Firefox.inopassaran-1.3.xpi)
-  - (Рекомендуется) Также можно установить из официального репозитория FireFox с [addons.mozilla.org](https://addons.mozilla.org/en-US/firefox/addon/inopassaran/)
 
 
 Настройка
@@ -161,7 +153,7 @@ Download
 
 1.5 (beta)
 - Реализована поддержка разных типов шифрования
-- Включена поддержка шифрования "You Shall Pass!"
+- Включена поддержка шифрования "[You Shall Pass!](https://github.com/wawan93/you_shall_pass)"
 - С помощью "You Shall Pass!" появилась возможность применять разный регистр и спец.символы
 
 1.4 (beta)
