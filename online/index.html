@@ -25,6 +25,9 @@
 	
 		<label for="algorithm" data-l10n-id="algorithm_title">Алгоритм шифрования</label>
 		<input id="algorithm">
+		
+		<label for="hashtypeA" data-l10n-id="hash_type">Тип шифрования</label>
+		<select id="hashtypeA"></select>
 		<label for="password">Мастер-пароль</label>
 
 		<input id="password" type="password"><!--
@@ -42,7 +45,6 @@
 	<fieldset id="filters" class="hide pbtnH">
 		<input id="subdomain" type="checkbox">
 		<label for="subdomain" data-l10n-id="subdomain">Отключить поддомены</label>
-
 		<label for="trim" data-l10n-id="trim">Обрезать</label>
 		<input id="trim">
 
@@ -58,7 +60,9 @@
 
 </form>
 
+<script type="text/javascript" src="../data/js/functions.js"></script>
 <script type="text/javascript" src="../data/js/md5-min.js"></script>
+<script type="text/javascript" src="../data/js/you_shall_pass.js"></script>
 <script type="text/javascript" src="js/popup.js"></script>
 <script type="text/javascript" src="js/ZeroClipboard.min.js"></script>
 <script>

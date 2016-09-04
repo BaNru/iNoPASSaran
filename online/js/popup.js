@@ -1,5 +1,6 @@
 /* jshint -W100 */
 // TODO Сделать форму шире, в ширину MD5 строки (32 символа), чтобы умещалась вся строка
+// TODO рассмотреть возможность с помощью мастер пароля шифровать соль, алгоритм и базу.
 var DATA, DOMAIN,
 	password	= document.getElementById('password'),
 	passinsert	= document.getElementById('passinsert'),
@@ -14,7 +15,9 @@ var DATA, DOMAIN,
 	site_d		= document.getElementById('site_d'),
 	salt_input	= document.getElementById('salt'),
 	alg_input	= document.getElementById('algorithm'),
-	site_input	= document.getElementById('site');
+	site_input	= document.getElementById('site'),
+	hashtypeS	= document.getElementById('hashtype'),
+	hashtypeSA	= document.getElementById('hashtypeA');
 
 
 passshow.addEventListener('change', function () {
@@ -62,6 +65,23 @@ function callGenPass(tabChromeUrl){
 	);
 }
 
+/*
+ * Сохранение настроек для текущего сайт
+ */
+function saveSiteSetting(t,el){
+	var obj = {};
+
+	if (search_domain() === false) {
+		DATA[DOMAIN] = {};
+	}
+	obj = DATA[DOMAIN];
+
+	if (t.type == "checkbox") {
+		obj[el] = t.checked;
+	} else {
+		obj[el] = t.value;
+	}
+}
 
 
 /**
@@ -100,25 +120,12 @@ function pbtnTabs() {
 });
 
 function init(){
-	var rules = ['subdomain','trim','login'];
+	var rules = ['subdomain','trim','login','hashtype'];
 
 	rules.forEach(function(el, i) {
 		var rules_input = document.getElementById(el);
 
-		rules_input.onchange = function(){
-			var obj = {};
-
-			if (search_domain() === false) {
-				DATA[DOMAIN] = {};
-			}
-			obj = DATA[DOMAIN];
-
-			if (this.type == "checkbox") {
-				obj[el] = this.checked;
-			} else {
-				obj[el] = this.value;
-			}
-		};
+		rules_input.onchange = function(){saveSiteSetting(this,el);};
 		if (DATA && DATA[DOMAIN] && DATA[DOMAIN][el]) {
 			if (typeof DATA[DOMAIN][el] === "boolean") {
 				rules_input.checked = DATA[DOMAIN][el];
@@ -130,7 +137,6 @@ function init(){
 }
 
 
-	init();
 	DOMAIN = new URL(window.location.href).hostname;
 	DATA = {};
 	[site_input, salt_input, password, alg_input].forEach(function(el){
@@ -153,6 +159,18 @@ function init(){
 		}
 	});
 
+	GenHashList('md5',false,'hashtypeA');
+
+hashtypeSA.addEventListener('change', function(){
+	this.dataset.change = 'true';
+	if (showpassbtn.classList.contains('active')) {
+		showpassi.value = callGenPass();
+	} else {
+		showpassi.value = "";
+	}
+});
+	
+
 
 /**
  *
@@ -168,33 +186,54 @@ function init(){
  */
 function genPass(a,pass,salt,url){
 
-	var strAlg = ''
-		, l;
+	var strAlg = '',
+		l, sb, genHash;
 
 	// Проверка заполненности полей в режиме гостя
 	a = alg_input.value || a || error_cfg('Не указан алгоритм', alg_input);
 	salt = salt_input.value || salt || error_cfg('Не указана соль', salt_input);
 
-	a = a.toLowerCase();
-	if (a.indexOf(' ') >= 0) {
-		a = a.split(' ');
-	}
+	// Выбор типа шифрования
+	hash = (hashtypeSA.dataset.change && hashtypeSA.value) || (hashtypeS && hashtypeS.value) || 'md5';
 
-	l = a.length;
-	for(var i=0; i<l; i++){
-		strAlg += alg(
-			a[i],
-			pass,
-			salt,
-			url
-		);
+	// Оригинальный You Shall Pass
+	if(hash === 'ysp2' || hash === 'ysp3'){
+		strAlg = pass + (new URL(url)).hostname.replace('www.','').toLowerCase() + pass;
+		if(hash === 'ysp2'){
+			genHash = ysp(strAlg,false);
+		} else {
+			genHash = ysp(strAlg,true);
+		}
+	} else {
+		a = a.toLowerCase();
+		if (a.indexOf(' ') >= 0) {
+			a = a.split(' ');
+		}
+
+		l = a.length;
+		for(var i=0; i<l; i++){
+			strAlg += alg(
+				a[i],
+				pass,
+				salt,
+				url
+			);
+		}
+		// You Shall Pass
+		if(hash === 'ysp0'){
+			genHash = ysp(pass+''+strAlg,false);
+		} else if (hash === 'ysp1'){
+			genHash = ysp(pass+''+strAlg,true);
+		} else { // По умолчанию, MD5
+			genHash = hex_md5(pass+''+strAlg);
+		}
 	}
+	// Обрезаем, если требуется
 	if (DATA && DATA[DOMAIN] && DATA[DOMAIN].trim) {
-		var sb = DATA[DOMAIN].trim.match(/(-?[0-9]+)(?:.*?(-?[0-9]+))?/);
-		return (hex_md5(pass+''+strAlg)).substr(sb[1],sb[2]);
+		sb = DATA[DOMAIN].trim.match(/(-?[0-9]+)(?:.*?(-?[0-9]+))?/);
+		genHash = genHash.substr(sb[1],sb[2]);
 	}
-
-	return hex_md5(pass+''+strAlg);
+	return genHash;
 }
 
 
