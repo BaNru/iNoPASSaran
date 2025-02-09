@@ -12,7 +12,7 @@
 		"message" : "Encryption algorithm"
 	},
 	"algorithm_description" : {
-		"message" : "help: https://github.com/BaNru/iNoPASSaran)"
+		"message" : "help: https://github.com/BaNru/iNoPASSaran"
 	},
 
 	"subdomain" : {
@@ -35,14 +35,14 @@
 	"copy" : {
 		"message" : "Copy to Clipboard"
 	},
-	
+
 	"dis_domain" : {
 		"message" : "Disable domain"
 	},
 	"domain_title" : {
 		"message" : "Domain name"
 	},
-	
+
 	"hash_type" : {
 		"message" : "Hash type"
 	}
