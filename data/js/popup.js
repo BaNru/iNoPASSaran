@@ -54,6 +54,14 @@ function callGenPass(tabChromeUrl){
 		DATA['algorithm']||false,
 		password.value,
 		DATA['salt']||false,
+// @endif
+// @if NODE_ENV='online'
+		false,
+		password.value,
+		false,
+// @endif
+		// TODO Добавить предупреждение, что будет браться текущий домен, если поле пустое
+		// window.location.href
 		(function() {
 			if (!dis_domain.checked && site_input.value) {
 				return 'http://'+site_input.value.replace(/https?:\/\//,'');
@@ -63,37 +71,6 @@ function callGenPass(tabChromeUrl){
 				return false;
 			}
 		})()
-// @endif
-// @if NODE_ENV='firefox'
-		self.options.algorithm,
-		password.value,
-		self.options.salt,
-		// TODO Добавить предупреждение, что будет браться текущий домен, если поле пустое
-		// window.location.href
-		(function() {
-			if (!dis_domain.checked && site_input.value) {
-				return 'http://'+site_input.value.replace(/https?:\/\//,'');
-			} else if (!dis_domain.checked) {
-				return self.options.url;
-			} else {
-				return false;
-			}
-		})()
-// @endif
-// @if NODE_ENV='online'
-		false,
-		password.value,
-		false,
-		// TODO Добавить предупреждение
-		// window.location.href
-		(function() {
-			if (!dis_domain.checked && site_input.value) {
-				return 'http://'+site_input.value.replace(/https?:\/\//,'');
-			} else {
-				return false;
-			}
-		})()
-// @endif
 	);
 }
 
@@ -113,23 +90,7 @@ function saveSiteSetting(t,el){
 	} else {
 		obj[el] = t.value;
 	}
-// @exclude
-	if (typeof chrome !== "undefined"){
-// @endexclude
-// @if NODE_ENV='chrome'
-		saveSetting(DOMAIN,obj);
-// @endif
-// @exclude
-	} else {
-// @endexclude
-// @if NODE_ENV='firefox'
-		DATA[DOMAIN] = obj;
-		self.options.data = JSON.stringify(DATA);
-		self.port.emit("update", self.options.data);
-// @endif
-// @exclude
-	}
-// @endexclude
+	saveSetting(DOMAIN,obj);
 }
 
 
@@ -160,23 +121,9 @@ function pbtnTabs() {
 		this.classList.add('active');
 		document.querySelector('#'+this.dataset.show).classList.remove('hide');
 	}
-
-// @exclude
-	if (typeof chrome !== "undefined"){
-// @endexclude
-// @if NODE_ENV='chrome'
-		document.documentElement.style.minHeight = document.body.offsetHeight + 'px';
-// @endif
-// @exclude
-	} else {
-// @endexclude
-// @if NODE_ENV='firefox'
-		self.port.emit("resize", [document.body.offsetWidth,document.body.offsetHeight]);
-// @endif
-// @exclude
-	}
-// @endexclude
+	document.documentElement.style.minHeight = document.body.offsetHeight + 'px';
 }
+
 [].forEach.call(pbtn, function(element, index, array) {
 	if(element.dataset.show){
 		element.addEventListener('click', pbtnTabs);
@@ -200,23 +147,13 @@ function init(){
 	});
 }
 
-
-// @exclude
 // TODO Провести рефакторинг и оптимизацию!
 // TODO Разобраться с доменами при рефакторинге!
-if (typeof chrome !== "undefined"){
-// @endexclude
 // @if NODE_ENV='chrome'
 	chrome.storage.local.get(function (result) {
 		DATA = result;
 
 		if (!DATA['algorithm'] || !DATA['salt']) {
-			//alert("Настройте ¡No PASSarán!");
-			//try {
-			//	chrome.tabs.create({ 'url': 'chrome-extension://'+chrome.runtime.id+'/data/setting.html'});
-			//} catch(e) {
-			//	alert(e);
-			//}
 			error_cfg();
 		}
 
@@ -279,61 +216,6 @@ if (typeof chrome !== "undefined"){
 
 	password.focus();
 // @endif
-// @exclude
-} else { // Firefox
-// @endexclude
-// @if NODE_ENV='firefox'
-	DOMAIN = new URL(self.options.url).hostname;
-	DOMAIN = DOMAIN.substring(DOMAIN.lastIndexOf(".", DOMAIN.lastIndexOf(".") - 1) + 1);
-
-	if (self.options.data == '') {
-		DATA = {};
-	} else {
-		DATA = JSON.parse(self.options.data);
-	}
-
-	init();
-
-	passinsert.addEventListener('click', function click(event) {
-		self.port.emit(
-			"text-entered",
-			callGenPass()
-		);
-	}, false);
-	password.addEventListener("keyup", function(e) {
-        if (e.keyCode === 13) {
-            self.port.emit(
-				"text-entered",
-				callGenPass()
-			);
-        } else {
-			if (showpassbtn.classList.contains('active')) {
-				showpassi.value = callGenPass();
-			}
-		}
-    }, false);
-
-	copybtn.addEventListener('click', function click(event) {
-			this.classList.remove('ok');
-			this.offsetWidth = this.offsetWidth;
-			self.port.emit("copy", callGenPass());
-			this.classList.add('ok');
-	});
-
-	showpassbtn.addEventListener('click', function click(event) {
-		showpassi.value = callGenPass();
-	});
-	
-	GenHashList(self.options.hashtype);
-	GenHashList(self.options.hashtype,false,'hashtypeA');
-
-	self.port.on("show", function onShow() {
-		password.focus();
-	});
-// @endif
-// @exclude
-}
-// @endexclude
 // @if NODE_ENV='online'
 	DOMAIN = new URL(window.location.href).hostname;
 	DATA = {};
@@ -458,7 +340,7 @@ function genPass(a,pass,salt,url){
  *
  * return [domain, domain zone] or ["","",""]
  * TODO извабиться от лишнего пустого аргумента
- * 
+ *
  */
 function algDomain(url) {
 	// Если нет домена
@@ -478,7 +360,7 @@ function algDomain(url) {
 /**
  *
  * Algorithm
- * 
+ *
  * a - generate algorithm
  * pass - Master Password
  * salt - Salt
@@ -635,7 +517,7 @@ function alg(a,pass,salt,url) {
  * Если строка нечетная, то +1 к первой половине
  *
  * Return array[0,1]
- * 
+ *
  * Возвращает массив:
  * первая половина строки: halfString(str)[0]
  * вторая половина строки: halfString(str)[1]
@@ -684,7 +566,7 @@ function search_domain() {
  */
 // TODO Переделать и расширить ошибки
 function error_cfg(text,el) {
-// @if NODE_ENV='chrome' || NODE_ENV='firefox'
+// @if NODE_ENV='chrome'
 	if (!document.querySelector('#errorCFG')) {
 		var error = document.createElement('div');
 		error.className = 'error';
@@ -694,7 +576,8 @@ function error_cfg(text,el) {
 	}
 // @endif
 // @if NODE_ENV='online'
-	if(el.nextSibling.className == 'error'){
+	let errorEl;
+	if (el.nextSibling.className == 'error') {
 		errorEl = el.nextSibling;
 	} else {
 		errorEl = document.createElement('div');

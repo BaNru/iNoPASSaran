@@ -53,11 +53,13 @@ function callGenPass(tabChromeUrl){
 		false,
 		password.value,
 		false,
-		// TODO Добавить предупреждение
+		// TODO Добавить предупреждение, что будет браться текущий домен, если поле пустое
 		// window.location.href
 		(function() {
 			if (!dis_domain.checked && site_input.value) {
 				return 'http://'+site_input.value.replace(/https?:\/\//,'');
+			} else if (!dis_domain.checked) {
+				return tabChromeUrl;
 			} else {
 				return false;
 			}
@@ -81,6 +83,7 @@ function saveSiteSetting(t,el){
 	} else {
 		obj[el] = t.value;
 	}
+	saveSetting(DOMAIN,obj);
 }
 
 
@@ -111,8 +114,9 @@ function pbtnTabs() {
 		this.classList.add('active');
 		document.querySelector('#'+this.dataset.show).classList.remove('hide');
 	}
-
+	document.documentElement.style.minHeight = document.body.offsetHeight + 'px';
 }
+
 [].forEach.call(pbtn, function(element, index, array) {
 	if(element.dataset.show){
 		element.addEventListener('click', pbtnTabs);
@@ -136,7 +140,8 @@ function init(){
 	});
 }
 
-
+// TODO Провести рефакторинг и оптимизацию!
+// TODO Разобраться с доменами при рефакторинге!
 	DOMAIN = new URL(window.location.href).hostname;
 	DATA = {};
 	[site_input, salt_input, password, alg_input].forEach(function(el){
@@ -259,7 +264,7 @@ function genPass(a,pass,salt,url){
  *
  * return [domain, domain zone] or ["","",""]
  * TODO извабиться от лишнего пустого аргумента
- * 
+ *
  */
 function algDomain(url) {
 	// Если нет домена
@@ -279,7 +284,7 @@ function algDomain(url) {
 /**
  *
  * Algorithm
- * 
+ *
  * a - generate algorithm
  * pass - Master Password
  * salt - Salt
@@ -436,7 +441,7 @@ function alg(a,pass,salt,url) {
  * Если строка нечетная, то +1 к первой половине
  *
  * Return array[0,1]
- * 
+ *
  * Возвращает массив:
  * первая половина строки: halfString(str)[0]
  * вторая половина строки: halfString(str)[1]
@@ -485,7 +490,8 @@ function search_domain() {
  */
 // TODO Переделать и расширить ошибки
 function error_cfg(text,el) {
-	if(el.nextSibling.className == 'error'){
+	let errorEl;
+	if (el.nextSibling.className == 'error') {
 		errorEl = el.nextSibling;
 	} else {
 		errorEl = document.createElement('div');

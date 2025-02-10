@@ -5,14 +5,14 @@
 	"author": "BaNru",
 	"license": "MPL 2.0",
 	"homepage": "https://github.com/BaNru/iNoPASSaran",
-
 	"main": "gulpfile.js",
 	"devDependencies": {
-		"gulp": "*",
+		"gulp": "^4.0.2",
+		"gulp-iconfont": "^10.0.3",
 		"gulp-preprocess": "*",
 		"gulp-rename": "*",
-		"gulp-iconfont": "*",
-		"gulp-watch": "*",
-		"gulp-strip-comments" : "*"
+		"gulp-replace": "^1.1.4",
+		"gulp-strip-comments": "*",
+		"gulp-watch": "*"
 	}
 }
