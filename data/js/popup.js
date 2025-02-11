@@ -571,8 +571,14 @@ function error_cfg(text,el) {
 		var error = document.createElement('div');
 		error.className = 'error';
 		error.id = 'errorCFG';
-		error.innerHTML = "Ошибка в настройках плагина!<br>Вероятно не введены данные!";
-		document.getElementById('pswd').appendChild(error);
+		error.innerHTML = chrome.i18n.getMessage("error");
+		if (!DATA['algorithm'] || !DATA['salt']){
+			error.innerHTML += '<br>' + chrome.i18n.getMessage("error_nosetting") + ' <img src="/data/img/mascot.png" style="width:80%;display:block;margin:auto;"><a href="' + chrome.runtime.getURL("data/setting.html") + '" target="_blank" class="button">' + chrome.i18n.getMessage("error_nosetting_btn") + '</a>';
+		}
+		error.style = 'font-size: 6.5vw; line-height: 150%; padding: 0 20px;margin: 0;'
+		document.getElementById('pswd').parentNode.appendChild(error);
+		document.getElementById('pswd').style.display = 'none';
+		document.querySelector('.pbtn').style.display = 'none';
 	}
 // @endif
 // @if NODE_ENV='online'

@@ -45,6 +45,16 @@
 
 	"hash_type" : {
 		"message" : "Hash type"
+	},
+
+	"error": {
+		"message": "ERROR!"
+	},
+	"error_nosetting": {
+		"message": "You must specify the data in the extension settings!"
+	},
+	"error_nosetting_btn": {
+		"message": "Go to the extension settings page"
 	}
 
 }
